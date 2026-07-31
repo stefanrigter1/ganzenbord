@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Rode Parel Ganzenweekend Tinnen Editiespel</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body { font-family: 'Comic Sans MS', 'Comic Sans', cursive; background: #2D7A2D; }
+
+/* ===== LOGIN OVERLAY ===== */
+#login-overlay {
+  position: fixed; inset: 0; z-index: 100;
+  background: linear-gradient(160deg, #2D7A2D, #1A4A1A);
+  display: flex; align-items: center; justify-content: center;
+}
+.login-kaart {
+  background: rgba(255,255,255,0.95);
+  border-radius: 18px;
+  padding: 2rem 2.2rem;
+  width: min(380px, 90vw);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+  text-align: center;
+}
+.login-kaart h1 { font-size: 19px; margin-bottom: 0.3rem; line-height: 1.4; }
+.login-kaart p { font-size: 12.5px; color: #555; margin-bottom: 1.2rem; }
+.login-veld { margin-bottom: 0.9rem; text-align: left; }
+.login-veld label { display: block; font-size: 12px; font-weight: bold; color: #333; margin-bottom: 3px; }
+.login-veld input {
+  width: 100%; padding: 9px 12px;
+  border: 2px solid #C8B888; border-radius: 10px;
+  font-family: 'Comic Sans MS', cursive; font-size: 14px;
+  outline: none;
+}
+.login-veld input:focus { border-color: #C84B20; }
+.login-fout { color: #C0392B; font-size: 12px; min-height: 18px; margin-bottom: 0.5rem; }
+.login-knop {
+  width: 100%; padding: 11px;
+  border-radius: 12px; border: none;
+  background: #C84B20; color: white;
+  font-family: 'Comic Sans MS', cursive; font-size: 15px; font-weight: bold;
+  cursor: pointer; box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+}
+.login-knop:hover { background: #A83810; }
+
+/* ===== SPEL LAYOUT ===== */
+#gb {
+  display: flex;
+  height: 100vh;
+  padding: 10px;
+  gap: 12px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.bord-kolom {
+  flex: 1 1 auto;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 8px; min-width: 0;
+}
+.titel {
+  text-align: center;
+  font-size: 20px; font-weight: bold; line-height: 1.3;
+  letter-spacing: 0.5px;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+  flex-shrink: 0;
+}
+.bord-kolom svg {
+  max-height: calc(100vh - 70px);
+  max-width: 100%; height: auto; width: auto;
+  border-radius: 12px; min-height: 0;
+}
+.zij-kolom {
+  flex: 0 0 320px;
+  display: flex; flex-direction: column;
+  gap: 10px; min-height: 0;
+  justify-content: flex-start; padding-top: 6px;
+}
+.controls { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
+.knop { padding: 8px 16px; border-radius: 20px; border: none; background: #C84B20; color: white; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Comic Sans MS', cursive; box-shadow: 0 2px 6px rgba(0,0,0,0.25); white-space: nowrap; }
+.knop:hover { background: #A83810; }
+.knop:disabled { opacity: 0.4; cursor: not-allowed; }
+.dobbel-tray { display: flex; align-items: center; gap: 14px; }
+.dobbel-slot { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.dobbel-naam { font-size: 10px; color: rgba(255,255,255,0.85); font-weight: 600; }
+.dobbel-paar { display: flex; gap: 5px; }
+.dice { width: 34px; height: 34px; background: linear-gradient(135deg, #FFFDF7, #F0EAD8); border-radius: 7px; border: 1.5px solid #C8B888; box-shadow: 0 3px 6px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.6); display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); padding: 4px; }
+.dice .pip { width: 6px; height: 6px; border-radius: 50%; background: #3A2800; margin: auto; opacity: 0; }
+.dice.rolling { animation: rollDice 0.55s ease-in-out infinite; }
+@keyframes rollDice { 0%{transform:rotate(0deg) scale(1);} 25%{transform:rotate(90deg) scale(1.08);} 50%{transform:rotate(180deg) scale(0.95);} 75%{transform:rotate(270deg) scale(1.08);} 100%{transform:rotate(360deg) scale(1);} }
+.dice.landed { animation: landDice 0.3s ease-out; }
+@keyframes landDice { 0%{transform:scale(1.3) rotate(15deg);} 60%{transform:scale(0.9) rotate(-5deg);} 100%{transform:scale(1) rotate(0deg);} }
+.log {
+  background: rgba(255,255,255,0.9);
+  border-radius: 10px; padding: 0.7rem 0.9rem;
+  font-size: 13px; color: #222;
+  flex: 1 1 auto; min-height: 0; overflow-y: auto; line-height: 1.7;
+}
+.log .verhaal { color: #444; font-style: italic; }
+.log .consequentie { color: #C84B20; font-weight: bold; }
+
+/* ===== WIN OVERLAY ===== */
+#win-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,0.65);
+  display: none;
+  align-items: center; justify-content: center;
+  flex-direction: column;
+}
+#win-overlay.actief { display: flex; }
+.win-tekst {
+  color: #FFD700; font-size: 26px; font-weight: bold;
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+  margin-bottom: 1.2rem; text-align: center;
+  padding: 0 1rem;
+}
+.envelop {
+  font-size: 90px;
+  cursor: pointer;
+  animation: wiebel 1s ease-in-out infinite;
+  filter: drop-shadow(0 0 25px rgba(255,215,0,0.8));
+  transition: transform 0.2s;
+  background: none; border: none;
+}
+.envelop:hover { transform: scale(1.15); }
+@keyframes wiebel {
+  0%,100% { transform: rotate(-4deg); }
+  50% { transform: rotate(4deg); }
+}
+.envelop-hint { color: white; font-size: 14px; margin-top: 0.8rem; opacity: 0.85; }
+
+/* ===== PDF VIEWER ===== */
+#pdf-overlay {
+  position: fixed; inset: 0; z-index: 300;
+  background: rgba(0,0,0,0.85);
+  display: none;
+  flex-direction: column;
+  padding: 16px;
+}
+#pdf-overlay.actief { display: flex; }
+.pdf-balk {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 10px; gap: 10px;
+}
+.pdf-balk .titel-klein { color: #FFD700; font-size: 16px; font-weight: bold; }
+.pdf-knoppen { display: flex; gap: 8px; }
+.pdf-knoppen a, .pdf-knoppen button {
+  padding: 7px 14px; border-radius: 16px; border: none;
+  font-family: 'Comic Sans MS', cursive; font-size: 13px; font-weight: bold;
+  cursor: pointer; text-decoration: none;
+}
+.pdf-download { background: #FFD700; color: #333; }
+.pdf-sluit { background: #C84B20; color: white; }
+#pdf-frame { flex: 1; border: none; border-radius: 10px; background: white; }
+
+/* ===== CONFETTI ===== */
+.confetti {
+  position: fixed;
+  width: 10px; height: 14px;
+  top: -20px;
+  z-index: 250;
+  pointer-events: none;
+  animation: valNeer linear forwards;
+}
+@keyframes valNeer {
+  to { transform: translateY(110vh) rotate(720deg); }
+}
+
+@media (max-width: 900px) {
+  html, body { overflow: auto; }
+  #gb { flex-direction: column; height: auto; }
+  .zij-kolom { flex: 1 1 auto; }
+  .log { max-height: 140px; min-height: 100px; }
+  .bord-kolom svg { max-height: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-overlay">
+  <div class="login-kaart">
+    <h1 id="login-titel"></h1>
+    <p>Log in om te spelen. Versla de computer en ontvang jouw persoonlijke uitnodiging!</p>
+    <div class="login-veld">
+      <label for="inp-naam">Naam</label>
+      <input type="text" id="inp-naam" autocomplete="off" placeholder="Jouw naam">
+    </div>
+    <div class="login-veld">
+      <label for="inp-ww">Wachtwoord</label>
+      <input type="password" id="inp-ww" placeholder="Jouw wachtwoord">
+    </div>
+    <div class="login-fout" id="login-fout"></div>
+    <button class="login-knop" onclick="probeerLogin()">Inloggen</button>
+  </div>
+</div>
+
+<!-- SPEL -->
+<div id="gb">
+  <div class="bord-kolom">
+    <div class="titel" id="titel"></div>
+    <svg id="svg" viewBox="0 0 680 580" xmlns="http://www.w3.org/2000/svg"></svg>
+  </div>
+  <div class="zij-kolom">
+    <div class="controls">
+      <button class="knop" id="knop" onclick="gooi()">&#127922; Gooi!</button>
+      <div class="dobbel-tray">
+        <div class="dobbel-slot">
+          <div class="dobbel-naam" id="naam-speler">JIJ</div>
+          <div class="dobbel-paar">
+            <div class="dice" id="dice-jij-1"></div>
+            <div class="dice" id="dice-jij-2"></div>
+          </div>
+        </div>
+        <div class="dobbel-slot">
+          <div class="dobbel-naam">COMPUTER</div>
+          <div class="dobbel-paar">
+            <div class="dice" id="dice-pc-1"></div>
+            <div class="dice" id="dice-pc-2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="log" id="log">Welkom bij Ganzenbord! Gooi de dobbelstenen om te beginnen.</div>
+  </div>
+</div>
+
+<!-- WIN OVERLAY -->
+<div id="win-overlay">
+  <div class="win-tekst" id="win-tekst"></div>
+  <button class="envelop" onclick="openUitnodiging()">&#9993;&#65039;</button>
+  <div class="envelop-hint">Klik op de envelop om je uitnodiging te openen!</div>
+</div>
+
+<!-- PDF VIEWER -->
+<div id="pdf-overlay">
+  <div class="pdf-balk">
+    <div class="titel-klein" id="pdf-titel"></div>
+    <div class="pdf-knoppen">
+      <a class="pdf-download" id="pdf-download" download>&#11015;&#65039; Download</a>
+      <button class="pdf-sluit" onclick="sluitPdf()">Sluiten</button>
+    </div>
+  </div>
+  <iframe id="pdf-frame"></iframe>
+</div>
+
+<script>
+// ===== SPELERS =====
+const SPELERS = {
+  'milan':     { ww: 'Milan1',     pdf: 'uitnodigingen/milan.pdf' },
+  'friedrich': { ww: 'Friedrich@', pdf: 'uitnodigingen/friedrich.pdf' },
+  'jimi':      { ww: 'JimiC',      pdf: 'uitnodigingen/jimi.pdf' },
+  'jochem':    { ww: 'Jochem9',    pdf: 'uitnodigingen/jochem.pdf' },
+  'thomas':    { ww: 'Thomas$',    pdf: 'uitnodigingen/thomas.pdf' },
+  'yorick':    { ww: 'YorickX',    pdf: 'uitnodigingen/yorick.pdf' },
+};
+
+let ingelogdeSpeler = null; // { naam (weergave), pdf }
+
+function probeerLogin(){
+  const naamInput = document.getElementById('inp-naam').value.trim();
+  const ww = document.getElementById('inp-ww').value;
+  const sleutel = naamInput.toLowerCase();
+  const fout = document.getElementById('login-fout');
+
+  if(!SPELERS[sleutel]){
+    fout.textContent = 'Deze naam staat niet op de gastenlijst...';
+    return;
+  }
+  if(SPELERS[sleutel].ww !== ww){
+    fout.textContent = 'Onjuist wachtwoord, probeer opnieuw!';
+    return;
+  }
+  const weergaveNaam = naamInput.charAt(0).toUpperCase() + naamInput.slice(1).toLowerCase();
+  ingelogdeSpeler = { naam: weergaveNaam, pdf: SPELERS[sleutel].pdf };
+  document.getElementById('login-overlay').style.display = 'none';
+  document.getElementById('naam-speler').textContent = weergaveNaam.toUpperCase();
+  setLog('Welkom ' + weergaveNaam + '! Gooi de dobbelstenen om te beginnen. Versla de computer en win jouw uitnodiging!');
+}
+
+// Enter-toets werkt ook
+document.addEventListener('DOMContentLoaded', () => {
+  ['inp-naam','inp-ww'].forEach(id => {
+    document.getElementById(id).addEventListener('keydown', e => {
+      if(e.key === 'Enter') probeerLogin();
+    });
+  });
+});
+
+// ===== WIN SEQUENCE =====
+function startWinSequence(){
+  maakConfetti();
+  document.getElementById('win-tekst').textContent = 'Gefeliciteerd ' + ingelogdeSpeler.naam + '! Je hebt gewonnen!';
+  setTimeout(() => {
+    document.getElementById('win-overlay').classList.add('actief');
+  }, 800);
+}
+
+function maakConfetti(){
+  const kleuren = ['#FF0000','#FF8C00','#FFD700','#00AA00','#1E90FF','#8A2BE2','#FF1493','#00CED1'];
+  for(let i=0; i<120; i++){
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random()*100 + 'vw';
+    c.style.background = kleuren[Math.floor(Math.random()*kleuren.length)];
+    c.style.animationDuration = (2 + Math.random()*2.5) + 's';
+    c.style.animationDelay = (Math.random()*1.5) + 's';
+    c.style.transform = 'rotate(' + Math.random()*360 + 'deg)';
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 6000);
+  }
+}
+
+function openUitnodiging(){
+  document.getElementById('win-overlay').classList.remove('actief');
+  const pdfPad = ingelogdeSpeler.pdf;
+  document.getElementById('pdf-titel').textContent = 'Persoonlijke uitnodiging voor ' + ingelogdeSpeler.naam;
+  document.getElementById('pdf-frame').src = pdfPad;
+  const dl = document.getElementById('pdf-download');
+  dl.href = pdfPad;
+  dl.setAttribute('download', 'Uitnodiging_' + ingelogdeSpeler.naam + '.pdf');
+  document.getElementById('pdf-overlay').classList.add('actief');
+}
+
+function sluitPdf(){
+  document.getElementById('pdf-overlay').classList.remove('actief');
+  document.getElementById('pdf-frame').src = '';
+}
+
+// ===== TITEL =====
+function maakTitel() {
+  const tekst = 'Rode Parel Ganzenweekend Tinnen Editiespel';
+  const kleuren = ['#FF0000','#FF4500','#FF8C00','#FFD700','#9ACD32','#00AA00','#00CED1','#1E90FF','#8A2BE2','#FF1493'];
+  ['titel','login-titel'].forEach(elId => {
+    const el = document.getElementById(elId);
+    el.innerHTML = '';
+    let k = 0;
+    for (let i = 0; i < tekst.length; i++) {
+      const s = document.createElement('span');
+      s.textContent = tekst[i];
+      if (tekst[i] !== ' ') { s.style.color = kleuren[k % kleuren.length]; k++; }
+      el.appendChild(s);
+    }
+  });
+}
+maakTitel();
+
+const VAKDATA = {
+  5:  {verhaal: "Friedrich begint weer eens het rondje \"hoe was je week\" op de vrijmibo en iedereen heeft een goede week gehad!", consequentie: "Gooi opnieuw en beweeg nogmaals het aantal ogen vooruit"},
+  6:  {verhaal: "Juan rolt hem binnestebuiten!", consequentie: "Spring direct naar vak 12"},
+  9:  {verhaal: "Banning krijgt een nieuwe station familiewagen, ditmaal een Renault!", consequentie: "Gooi opnieuw en beweeg nogmaals het aantal ogen vooruit"},
+  14: {verhaal: "Jimi PR't zijn squat: barkie op de rug!", consequentie: "Gooi opnieuw en beweeg nogmaals het aantal ogen vooruit"},
+  18: {verhaal: "4 ton overwaarde op je huis, de winst is gemaximaliseerd!", consequentie: "Gooi opnieuw en beweeg nogmaals het aantal ogen vooruit"},
+  19: {verhaal: "Dino pist over je buurvrouw!", consequentie: "Sla een beurt over"},
+  23: {verhaal: "Marit geeft je een nieuwe lading gezonde vapes cadeau!", consequentie: "Gooi opnieuw en beweeg nogmaals het aantal ogen vooruit"},
+  27: {verhaal: "De aubergine is in de aanbieding!", consequentie: "Gooi opnieuw en beweeg nogmaals het aantal ogen vooruit"},
+  31: {verhaal: "Je valt in slaap op de oprit, slaap eerst je roes maar uit!", consequentie: "Sla twee beurten over"},
+  32: {verhaal: "Jon Bovi blijkt echt te bestaan!", consequentie: "Gooi opnieuw en beweeg nogmaals het aantal ogen vooruit"},
+  36: {verhaal: "Een nieuw snoepreisje naar een tropisch oord in het verschiet!", consequentie: "Gooi opnieuw en beweeg nogmaals het aantal ogen vooruit"},
+  41: {verhaal: "Je geeft geen fuck om dat, je kiest je eigen pad", consequentie: "Gooi opnieuw en beweeg nogmaals het aantal ogen vooruit"},
+  42: {verhaal: "Je belandt in een vechtpartij met Spanjaarden", consequentie: "Ga terug naar vak 39"},
+  45: {verhaal: "Je hebt een duif gespiesd en zit onder het bloed, lekker bezig!", consequentie: "Gooi opnieuw en beweeg nogmaals het aantal ogen vooruit"},
+  50: {verhaal: "Je Tesla is volledig opgeladen, bestemming nog niet bereikt!", consequentie: "Gooi opnieuw en beweeg nogmaals het aantal ogen vooruit"},
+  52: {verhaal: "Je lange mat wordt niet meer getolereerd bij het leger en je moet kaal.", consequentie: "Sla drie beurten over"},
+  54: {verhaal: "De tinnen editie van het Rode Parelweekend is bijna zover!", consequentie: "Gooi opnieuw en beweeg nogmaals het aantal ogen vooruit"},
+  58: {verhaal: "Pepe coin is gedecimeerd, je vermogen verdampt en je moet je schepen verbranden…", consequentie: "Ga terug naar start"},
+  59: {verhaal: "Je speelt nu echt Champions League. Het werp haar vruchten af!", consequentie: "Gooi opnieuw en beweeg nogmaals het aantal ogen vooruit"},
+  63: {verhaal: "Gefeliciteerd! Je ontsleutelt hiermee een groot geheim", consequentie: "Winnaar!"},
+};
+
+const GANZEN = new Set([5,9,14,18,23,27,32,36,41,45,50,54,59]);
+const SPEC = {
+  6:  {emoji:'\u{1F309}', kleur:'#AED6F1'},
+  19: {emoji:'\u{1F37A}', kleur:'#F9E07A'},
+  31: {emoji:'\u{1FAA3}', kleur:'#C8C6BC'},
+  42: {emoji:'\u{1F300}', kleur:'#A8D48A'},
+  52: {emoji:'\u26D3\uFE0F', kleur:'#F0B8C8'},
+  58: {emoji:'\u{1F480}', kleur:'#F5A0A0'},
+};
+
+const GANS_SRC = 'gans.png';
+
+function maakRoute() {
+  return [
+    [60,530],[130,548],[205,538],[275,550],[345,535],[415,548],[488,532],[555,545],[615,525],[645,490],
+    [638,445],[652,400],[635,358],[648,315],[630,272],[645,228],[625,188],[640,148],[618,112],
+    [575,88],[528,72],[478,84],[428,68],[378,80],[328,65],[278,78],[228,62],[178,76],[128,60],[85,78],[55,112],[42,155],
+    [58,198],[38,240],[55,282],[38,325],[58,365],[40,408],[62,445],
+    [108,462],[160,448],[215,462],[268,448],[322,460],[375,445],[425,458],
+    [468,432],[488,392],[472,352],[490,312],[470,272],
+    [438,248],[395,258],[350,242],[305,255],[260,240],
+    [225,265],[208,302],[220,338],
+    [258,355],[300,370],[345,355],[375,318],[340,300],
+  ];
+}
+const route = maakRoute();
+
+function routeNaarPath(pts) {
+  let d = 'M ' + pts[0][0] + ' ' + pts[0][1];
+  for(let i=0;i<pts.length-1;i++){
+    const p0=pts[Math.max(i-1,0)],p1=pts[i],p2=pts[i+1],p3=pts[Math.min(i+2,pts.length-1)];
+    const cp1x=p1[0]+(p2[0]-p0[0])/5,cp1y=p1[1]+(p2[1]-p0[1])/5;
+    const cp2x=p2[0]-(p3[0]-p1[0])/5,cp2y=p2[1]-(p3[1]-p1[1])/5;
+    d += ' C ' + cp1x.toFixed(1) + ' ' + cp1y.toFixed(1) + ', ' + cp2x.toFixed(1) + ' ' + cp2y.toFixed(1) + ', ' + p2[0] + ' ' + p2[1];
+  }
+  return d;
+}
+
+function tegelKleur(nr) {
+  if(nr===0) return '#F5E6C8'; if(nr===63) return '#FFD700';
+  if(GANZEN.has(nr)) return '#B8E89A'; if(SPEC[nr]) return SPEC[nr].kleur;
+  return nr%2===0?'#FFF8EE':'#E8F4FF';
+}
+function tegelR(nr) {
+  if(nr===0||nr===63) return 20; if(SPEC[nr]||GANZEN.has(nr)) return 17; return 14;
+}
+
+function ns(tag){return document.createElementNS('http://www.w3.org/2000/svg',tag);}
+function attr(el,obj){Object.entries(obj).forEach(([k,v])=>el.setAttribute(k,v));return el;}
+function app(p,el){p.appendChild(el);return el;}
+
+function tekenGansAfbeelding(svg, cx, cy, w, h, flipX) {
+  const g=ns('g');
+  if(flipX) g.setAttribute('transform','translate('+cx+','+cy+') scale(-1,1) translate('+(-cx)+','+(-cy)+')');
+  const img=ns('image');
+  img.setAttribute('x',cx-w/2); img.setAttribute('y',cy-h/2);
+  img.setAttribute('width',w); img.setAttribute('height',h);
+  img.setAttribute('href',GANS_SRC); img.setAttribute('preserveAspectRatio','xMidYMid meet');
+  g.appendChild(img); svg.appendChild(g);
+}
+
+function tekenGras(svg) {
+  app(svg,attr(ns('rect'),{width:680,height:580,fill:'#3A8C3A'}));
+  const grasPos=[[30,300],[90,200],[150,400],[200,150],[250,480],[310,100],[370,490],[430,130],[500,400],[560,200],[600,460],[80,460],[160,520],[430,510],[560,380],[620,300],[180,330],[340,430],[420,370],[550,130],[100,130],[280,200],[480,490],[70,360],[340,180],[510,280],[170,455],[230,390],[290,430],[360,400],[390,475],[460,380]];
+  grasPos.forEach(([gx,gy])=>{
+    const n=3+Math.floor((gx*gy)%3);
+    for(let i=0;i<n;i++){
+      const ox=(i-n/2)*5+((gx+i*7)%8-4),h=12+(gx*i)%10,b=((gy+i*11)%20-10);
+      attr(app(svg,ns('path')),{d:'M '+(gx+ox)+' '+gy+' Q '+(gx+ox+b)+' '+(gy-h/2)+' '+(gx+ox+b/2)+' '+(gy-h),stroke:((gx+gy+i)%3===0)?'#2A6E2A':'#4CAF4C','stroke-width':'1.5',fill:'none','stroke-linecap':'round'});
+    }
+  });
+  [[120,350],[280,460],[450,420],[570,250],[180,240],[390,150],[500,340],[640,400],[80,180]].forEach(([bx,by])=>{
+    for(let i=0;i<5;i++){const hoek=i/5*Math.PI*2;attr(app(svg,ns('ellipse')),{cx:bx+Math.cos(hoek)*7,cy:by+Math.sin(hoek)*7,rx:3,ry:2,transform:'rotate('+(i/5*360)+' '+(bx+Math.cos(hoek)*7)+' '+(by+Math.sin(hoek)*7)+')',fill:'#FF9EBC',opacity:'0.85'});}
+    attr(app(svg,ns('circle')),{cx:bx,cy:by,r:4,fill:'#FFE066',stroke:'#E6A800','stroke-width':'0.8'});
+  });
+}
+
+function tekenGolfjes(svg,lijst){lijst.forEach(([x1,y1,x2,y2])=>{attr(app(svg,ns('path')),{d:'M '+x1+' '+y1+' Q '+((x1+x2)/2)+' '+(y1-4)+' '+x2+' '+y2,stroke:'rgba(255,255,255,0.45)','stroke-width':'1.1',fill:'none','stroke-linecap':'round'});});}
+
+function tekenWater(svg) {
+  const defs=app(svg,ns('defs'));
+  [{id:'wg1',cx:'38%',cy:'32%',stops:[{o:'0%',c:'#A8DFF5'},{o:'50%',c:'#52AACC'},{o:'100%',c:'#2A82A8'}]},{id:'wg2',cx:'45%',cy:'40%',stops:[{o:'0%',c:'#A2DEFA'},{o:'45%',c:'#4AAECE'},{o:'100%',c:'#1E7EA8'}]},{id:'wg3',cx:'40%',cy:'35%',stops:[{o:'0%',c:'#9AD8F5'},{o:'50%',c:'#48A8CC'},{o:'100%',c:'#1C7AA0'}]},{id:'wg4',cx:'42%',cy:'38%',stops:[{o:'0%',c:'#A5DCF7'},{o:'50%',c:'#50B0CE'},{o:'100%',c:'#1E7CA2'}]}].forEach(({id,cx,cy,stops})=>{const g=attr(app(defs,ns('radialGradient')),{id,cx,cy,r:'62%'});stops.forEach(s=>attr(app(g,ns('stop')),{offset:s.o,'stop-color':s.c}));});
+
+  attr(app(svg,ns('path')),{d:'M 92,375 C 76,360 74,342 90,330 C 104,320 126,318 150,326 C 170,332 186,328 198,340 C 212,354 210,372 196,386 C 182,400 158,406 132,404 C 106,402 92,390 92,375 Z',fill:'url(#wg1)',stroke:'#1E6A90','stroke-width':'1.4',opacity:'0.95'});
+  attr(app(svg,ns('ellipse')),{cx:118,cy:338,rx:20,ry:5,fill:'rgba(255,255,255,0.22)',transform:'rotate(-15 118 338)'});
+  tekenGolfjes(svg,[[102,353,142,350],[106,364,154,361],[100,376,144,373]]);
+  tekenGansAfbeelding(svg,112,355,42,42,false); tekenGansAfbeelding(svg,163,360,42,42,true);
+
+  attr(app(svg,ns('path')),{d:'M 308,120 C 326,108 354,104 382,110 C 408,116 430,106 456,112 C 480,118 500,108 520,116 C 540,124 552,136 550,150 C 548,164 536,174 522,178 C 510,182 498,176 488,184 C 478,192 474,208 460,218 C 446,228 428,226 414,216 C 400,206 394,192 380,186 C 364,180 346,184 330,174 C 314,164 304,150 302,136 C 300,124 300,126 308,120 Z',fill:'url(#wg2)',stroke:'#1E6A90','stroke-width':'1.6',opacity:'0.96'});
+  attr(app(svg,ns('ellipse')),{cx:415,cy:130,rx:48,ry:6,fill:'rgba(255,255,255,0.2)',transform:'rotate(-4 415 130)'});
+  tekenGolfjes(svg,[[316,134,368,130],[378,128,432,124],[442,130,498,126],[318,148,366,144],[376,150,428,146],[440,152,490,148],[322,164,368,160],[378,168,424,164]]);
+  tekenGansAfbeelding(svg,340,142,40,40,false); tekenGansAfbeelding(svg,420,130,40,40,true); tekenGansAfbeelding(svg,460,178,40,40,false);
+
+  attr(app(svg,ns('path')),{d:'M 118,118 C 106,108 118,96 136,100 C 158,104 178,98 198,106 C 218,114 232,126 228,140 C 224,154 206,160 188,156 C 168,152 150,156 136,148 C 122,140 116,130 118,118 Z',fill:'url(#wg3)',stroke:'#1E6A90','stroke-width':'1.4',opacity:'0.95'});
+  attr(app(svg,ns('ellipse')),{cx:170,cy:112,rx:30,ry:5,fill:'rgba(255,255,255,0.2)',transform:'rotate(-5 170 112)'});
+  tekenGolfjes(svg,[[124,124,170,121],[130,134,178,131],[136,144,176,142]]);
+  tekenGansAfbeelding(svg,148,132,40,40,false); tekenGansAfbeelding(svg,198,126,40,40,true);
+
+  attr(app(svg,ns('path')),{d:'M 520,412 C 508,402 512,390 528,392 C 548,394 568,388 586,396 C 604,404 614,416 608,430 C 602,444 582,448 562,444 C 542,440 524,432 520,412 Z',fill:'url(#wg4)',stroke:'#1E6A90','stroke-width':'1.4',opacity:'0.95'});
+  attr(app(svg,ns('ellipse')),{cx:564,cy:400,rx:30,ry:5,fill:'rgba(255,255,255,0.18)',transform:'rotate(3 564 400)'});
+  tekenGolfjes(svg,[[526,416,572,413],[530,426,576,423],[534,436,572,434]]);
+  tekenGansAfbeelding(svg,540,420,40,40,false); tekenGansAfbeelding(svg,592,418,40,40,true);
+}
+
+function bouwBord() {
+  const svg=document.getElementById('svg');
+  svg.innerHTML='';
+  tekenGras(svg); tekenWater(svg);
+  const pathD=routeNaarPath(route);
+  [['rgba(0,0,0,0.12)',38],['#C8A96E',32],['#DFC48A',24]].forEach(([k,b])=>{attr(app(svg,ns('path')),{d:pathD,fill:'none',stroke:k,'stroke-width':b,'stroke-linecap':'round','stroke-linejoin':'round'});});
+  for(let i=0;i<=63;i++){
+    const [cx,cy]=route[i],r=tegelR(i);
+    const punten=[];
+    for(let h=0;h<10;h++){const hoek=h/10*Math.PI*2;const v=r+Math.sin(hoek*3+i)*3+Math.cos(hoek*2+i*0.7)*2;punten.push([cx+v*Math.cos(hoek),cy+v*Math.sin(hoek)]);}
+    const pts=punten.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');
+    attr(app(svg,ns('polygon')),{points:punten.map(p=>(p[0]+2).toFixed(1)+','+(p[1]+2).toFixed(1)).join(' '),fill:'rgba(0,0,0,0.15)'});
+    attr(app(svg,ns('polygon')),{points:pts,fill:tegelKleur(i),stroke:'#8B7340','stroke-width':'1.2',id:'tegel-'+i});
+    const heeftEmoji=SPEC[i]||GANZEN.has(i)||i===63;
+    if(SPEC[i]){const t=attr(app(svg,ns('text')),{x:cx,y:cy-4,'text-anchor':'middle','font-size':'10'});t.textContent=SPEC[i].emoji;}
+    else if(GANZEN.has(i)){const t=attr(app(svg,ns('text')),{x:cx,y:cy-4,'text-anchor':'middle','font-size':'9'});t.textContent='\u{1FABF}';}
+    else if(i===63){const t=attr(app(svg,ns('text')),{x:cx,y:cy-5,'text-anchor':'middle','font-size':'11'});t.textContent='\u{1F3C1}';}
+    const num=attr(app(svg,ns('text')),{x:cx,y:heeftEmoji?cy+8:cy+4,'text-anchor':'middle','font-size':i===0||i===63?'9':'8','font-weight':'600',fill:'#3A2800'});
+    num.textContent=i===0?'S':i;
+  }
+  maakPionnen();
+}
+
+// ===== PIONNEN MET HOBBEL-ANIMATIE =====
+let pionEls = {};
+
+function maakPionnen(){
+  const svg=document.getElementById('svg');
+  ['jij','pc'].forEach((sp,idx)=>{
+    if(pionEls[sp]) { pionEls[sp].schaduw.remove(); pionEls[sp].cirkel.remove(); pionEls[sp].glans.remove(); }
+    const off = idx===0 ? -9 : 9;
+    const [cx,cy] = route[staat.posities[sp]];
+    const schaduw = attr(app(svg,ns('ellipse')),{cx:cx+off, cy:cy+7, rx:7, ry:2.5, fill:'rgba(0,0,0,0.25)'});
+    const cirkel = attr(app(svg,ns('circle')),{cx:cx+off, cy:cy-1, r:8, fill:sp==='jij'?'#C84B20':'#4A3AAA', stroke:'white','stroke-width':'1.8'});
+    const glans = attr(app(svg,ns('circle')),{cx:cx+off-2, cy:cy-4, r:2.5, fill:'rgba(255,255,255,0.45)'});
+    pionEls[sp] = {schaduw, cirkel, glans, off};
+  });
+}
+
+function zetPionOpPositie(sp, x, y, hoogte){
+  const p = pionEls[sp];
+  if(!p) return;
+  p.cirkel.setAttribute('cx', x);
+  p.cirkel.setAttribute('cy', y - 1 - hoogte);
+  p.glans.setAttribute('cx', x - 2);
+  p.glans.setAttribute('cy', y - 4 - hoogte);
+  p.schaduw.setAttribute('cx', x);
+  p.schaduw.setAttribute('cy', y + 7);
+  const schaal = Math.max(0.4, 1 - hoogte/30);
+  p.schaduw.setAttribute('rx', 7*schaal);
+  p.schaduw.setAttribute('ry', 2.5*schaal);
+}
+
+function hobbelStap(sp, vanIdx, naarIdx, duur){
+  return new Promise(resolve => {
+    const [x1,y1] = route[vanIdx];
+    const [x2,y2] = route[naarIdx];
+    const off = pionEls[sp].off;
+    const start = performance.now();
+    function frame(t){
+      let p = Math.min((t-start)/duur, 1);
+      const e = p<0.5 ? 2*p*p : 1-Math.pow(-2*p+2,2)/2;
+      const x = x1 + (x2-x1)*e + off;
+      const y = y1 + (y2-y1)*e;
+      const hoogte = Math.sin(p*Math.PI) * 14;
+      zetPionOpPositie(sp, x, y, hoogte);
+      if(p < 1) requestAnimationFrame(frame);
+      else resolve();
+    }
+    requestAnimationFrame(frame);
+  });
+}
+
+function grootSprong(sp, vanIdx, naarIdx, duur){
+  return new Promise(resolve => {
+    const [x1,y1] = route[vanIdx];
+    const [x2,y2] = route[naarIdx];
+    const off = pionEls[sp].off;
+    const start = performance.now();
+    function frame(t){
+      let p = Math.min((t-start)/duur, 1);
+      const e = p<0.5 ? 2*p*p : 1-Math.pow(-2*p+2,2)/2;
+      const x = x1 + (x2-x1)*e + off;
+      const y = y1 + (y2-y1)*e;
+      const hoogte = Math.sin(p*Math.PI) * 40;
+      zetPionOpPositie(sp, x, y, hoogte);
+      if(p < 1) requestAnimationFrame(frame);
+      else resolve();
+    }
+    requestAnimationFrame(frame);
+  });
+}
+
+async function loopNaar(sp, vanIdx, naarIdx){
+  if(vanIdx === naarIdx) return;
+  const afstand = Math.abs(naarIdx - vanIdx);
+  if(afstand > 12){
+    await grootSprong(sp, vanIdx, naarIdx, 700);
+    return;
+  }
+  const richting = naarIdx > vanIdx ? 1 : -1;
+  for(let i = vanIdx; i !== naarIdx; i += richting){
+    await hobbelStap(sp, i, i+richting, 150);
+  }
+}
+
+const PIP_PATRONEN={1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8]};
+function teken9Pips(d,w){d.innerHTML='';const a=new Set(PIP_PATRONEN[w]||[4]);for(let i=0;i<9;i++){const p=document.createElement('div');p.className='pip';if(a.has(i))p.style.opacity='1';d.appendChild(p);}}
+function zetDobbelsteen(id,w){teken9Pips(document.getElementById(id),w);}
+async function animeerWorp(ids,eind){
+  const els=ids.map(id=>document.getElementById(id));
+  els.forEach(el=>el.classList.add('rolling'));
+  const iv=setInterval(()=>{els.forEach(el=>teken9Pips(el,1+Math.floor(Math.random()*6)));},90);
+  await new Promise(r=>setTimeout(r,650));
+  clearInterval(iv);
+  els.forEach((el,i)=>{el.classList.remove('rolling');teken9Pips(el,eind[i]);el.classList.add('landed');setTimeout(()=>el.classList.remove('landed'),300);});
+}
+
+function logMsg(msg){const el=document.getElementById('log');el.innerHTML+='<br>'+msg;el.scrollTop=el.scrollHeight;}
+function logVakMsg(naam,worp,pos,vakdata){
+  const el=document.getElementById('log');
+  let html='<strong>'+naam+' gooit '+worp+' en staat op vak '+pos+'.</strong>';
+  if(vakdata){
+    html+='<br><span class="verhaal">\u{1F4D6} '+vakdata.verhaal+'</span>';
+    html+='<br><span class="consequentie">\u27A1\uFE0F '+vakdata.consequentie+'</span>';
+  }
+  el.innerHTML+='<br>'+html;
+  el.scrollTop=el.scrollHeight;
+}
+function setLog(msg){document.getElementById('log').innerHTML=msg;}
+function werpTotaal(){const a=1+Math.floor(Math.random()*6),b=1+Math.floor(Math.random()*6);return{a,b,totaal:a+b};}
+
+let staat={posities:{jij:0,pc:0},wacht:{jij:0,pc:0},bezig:false,klaar:false};
+
+const DICE_IDS = { jij: ['dice-jij-1','dice-jij-2'], pc: ['dice-pc-1','dice-pc-2'] };
+
+function spelerNaam(sp){
+  if(sp==='pc') return 'Computer';
+  return ingelogdeSpeler ? ingelogdeSpeler.naam : 'Jij';
+}
+
+async function verwerkZet(sp, eersteWorp){
+  const naam = spelerNaam(sp);
+
+  if(staat.wacht[sp]>0){
+    staat.wacht[sp]--;
+    logMsg('<strong>'+naam+' slaat een beurt over (nog '+staat.wacht[sp]+' te gaan).</strong>');
+    return false;
+  }
+
+  let worp = eersteWorp;
+  const oudePos = staat.posities[sp];
+  let pos = oudePos + worp;
+  let stuiterde = false;
+
+  if(pos>63){
+    pos = 63-(pos-63);
+    stuiterde = true;
+  }
+
+  if(stuiterde){
+    await loopNaar(sp, oudePos, 63);
+    logMsg('<strong>'+naam+' gooit '+worp+' \u2014 stuitert terug naar vak '+pos+'!</strong>');
+    await loopNaar(sp, 63, pos);
+  } else {
+    await loopNaar(sp, oudePos, pos);
+  }
+  staat.posities[sp] = pos;
+
+  if(pos===63){
+    staat.klaar=true;
+    logVakMsg(naam,worp,pos,VAKDATA[63]);
+    return true;
+  }
+
+  let g=0;
+  while(GANZEN.has(staat.posities[sp]) && g<10){
+    const gp = staat.posities[sp];
+    logVakMsg(naam,worp,gp,VAKDATA[gp]);
+
+    await new Promise(r=>setTimeout(r,450));
+
+    const {a,b,totaal} = werpTotaal();
+    await animeerWorp(DICE_IDS[sp],[a,b]);
+    worp = totaal;
+    logMsg('<em>\u{1F3B2} '+naam+' gooit opnieuw: '+worp+'!</em>');
+
+    let np = gp + worp;
+    if(np > 63){
+      np = 63-(np-63);
+      await loopNaar(sp, gp, 63);
+      logMsg('<strong>Stuitert terug naar vak '+np+'!</strong>');
+      await loopNaar(sp, 63, np);
+    } else {
+      await loopNaar(sp, gp, np);
+    }
+    staat.posities[sp] = np;
+
+    if(np===63){ staat.klaar=true; logVakMsg(naam,worp,np,VAKDATA[63]); return true; }
+    g++;
+  }
+
+  const v = staat.posities[sp];
+  if(v===6){ logVakMsg(naam,worp,v,VAKDATA[v]); await new Promise(r=>setTimeout(r,400)); await loopNaar(sp, 6, 12); staat.posities[sp]=12; }
+  else if(v===19){ staat.wacht[sp]=1; logVakMsg(naam,worp,v,VAKDATA[v]); }
+  else if(v===31){ staat.wacht[sp]=2; logVakMsg(naam,worp,v,VAKDATA[v]); }
+  else if(v===42){ logVakMsg(naam,worp,v,VAKDATA[v]); await new Promise(r=>setTimeout(r,400)); await loopNaar(sp, 42, 39); staat.posities[sp]=39; }
+  else if(v===52){ staat.wacht[sp]=3; logVakMsg(naam,worp,v,VAKDATA[v]); }
+  else if(v===58){ logVakMsg(naam,worp,v,VAKDATA[v]); await new Promise(r=>setTimeout(r,400)); await loopNaar(sp, 58, 0); staat.posities[sp]=0; }
+  else { logVakMsg(naam,worp,v,VAKDATA[v]); }
+
+  return false;
+}
+
+async function gooi(){
+  if(staat.bezig||staat.klaar)return;
+  if(!ingelogdeSpeler)return;
+  staat.bezig=true;
+  document.getElementById('knop').disabled=true;
+
+  try {
+    const {a:j1,b:j2,totaal:worp1} = werpTotaal();
+    await animeerWorp(DICE_IDS.jij,[j1,j2]);
+    const klaar1 = await verwerkZet('jij', worp1);
+    if(klaar1){
+      logMsg('\u{1F3C6} <strong>Gefeliciteerd '+ingelogdeSpeler.naam+', jij wint!</strong>');
+      eindeSpel();
+      startWinSequence();
+      return;
+    }
+
+    await new Promise(r=>setTimeout(r,500));
+
+    const {a:p1,b:p2,totaal:worp2} = werpTotaal();
+    await animeerWorp(DICE_IDS.pc,[p1,p2]);
+    const klaar2 = await verwerkZet('pc', worp2);
+    if(klaar2){
+      logMsg('\u{1F4BB} <strong>De computer wint dit keer! Probeer het opnieuw om je uitnodiging te winnen...</strong>');
+      eindeSpel();
+      return;
+    }
+
+  } catch(e) {
+    console.error('Fout tijdens beurt:', e);
+  } finally {
+    if(!staat.klaar){
+      staat.bezig=false;
+      document.getElementById('knop').disabled=false;
+    }
+  }
+}
+
+function eindeSpel(){
+  const k=document.getElementById('knop');
+  k.innerHTML='\u{1F504} Opnieuw';k.onclick=herstart;k.disabled=false;staat.bezig=false;
+}
+function herstart(){
+  staat={posities:{jij:0,pc:0},wacht:{jij:0,pc:0},bezig:false,klaar:false};
+  setLog('Nieuw spel! Gooi de dobbelstenen om te beginnen.');
+  const k=document.getElementById('knop');k.innerHTML='\u{1F3B2} Gooi!';k.onclick=gooi;k.disabled=false;
+  ['dice-jij-1','dice-jij-2','dice-pc-1','dice-pc-2'].forEach(id=>zetDobbelsteen(id,1));
+  maakPionnen();
+}
+
+bouwBord();
+['dice-jij-1','dice-jij-2','dice-pc-1','dice-pc-2'].forEach(id=>zetDobbelsteen(id,1));
+</script>
+</body>
+</html>
