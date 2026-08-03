@@ -8,163 +8,102 @@
 html, body { height: 100%; overflow: hidden; }
 body { font-family: 'Comic Sans MS', 'Comic Sans', cursive; background: #2D7A2D; }
 
-/* ===== LOGIN OVERLAY ===== */
-#login-overlay {
-  position: fixed; inset: 0; z-index: 100;
-  background: linear-gradient(160deg, #2D7A2D, #1A4A1A);
-  display: flex; align-items: center; justify-content: center;
-}
-.login-kaart {
-  background: rgba(255,255,255,0.95);
-  border-radius: 18px;
-  padding: 2rem 2.2rem;
-  width: min(380px, 90vw);
-  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-  text-align: center;
-}
+/* ===== LOGIN ===== */
+#login-overlay { position: fixed; inset: 0; z-index: 100; background: linear-gradient(160deg, #2D7A2D, #1A4A1A); display: flex; align-items: center; justify-content: center; }
+.login-kaart { background: rgba(255,255,255,0.95); border-radius: 18px; padding: 2rem 2.2rem; width: min(380px, 90vw); box-shadow: 0 10px 40px rgba(0,0,0,0.4); text-align: center; }
 .login-kaart h1 { font-size: 19px; margin-bottom: 0.3rem; line-height: 1.4; }
 .login-kaart p { font-size: 12.5px; color: #555; margin-bottom: 1.2rem; }
 .login-veld { margin-bottom: 0.9rem; text-align: left; }
 .login-veld label { display: block; font-size: 12px; font-weight: bold; color: #333; margin-bottom: 3px; }
-.login-veld input {
-  width: 100%; padding: 9px 12px;
-  border: 2px solid #C8B888; border-radius: 10px;
-  font-family: 'Comic Sans MS', cursive; font-size: 14px;
-  outline: none;
-}
+.login-veld input { width: 100%; padding: 9px 12px; border: 2px solid #C8B888; border-radius: 10px; font-family: 'Comic Sans MS', cursive; font-size: 14px; outline: none; }
 .login-veld input:focus { border-color: #C84B20; }
 .login-fout { color: #C0392B; font-size: 12px; min-height: 18px; margin-bottom: 0.5rem; }
-.login-knop {
-  width: 100%; padding: 11px;
-  border-radius: 12px; border: none;
-  background: #C84B20; color: white;
-  font-family: 'Comic Sans MS', cursive; font-size: 15px; font-weight: bold;
-  cursor: pointer; box-shadow: 0 3px 8px rgba(0,0,0,0.25);
-}
+.login-knop { width: 100%; padding: 11px; border-radius: 12px; border: none; background: #C84B20; color: white; font-family: 'Comic Sans MS', cursive; font-size: 15px; font-weight: bold; cursor: pointer; box-shadow: 0 3px 8px rgba(0,0,0,0.25); }
 .login-knop:hover { background: #A83810; }
 
-/* ===== SPEL LAYOUT ===== */
-#gb {
-  display: flex;
-  height: 100vh;
-  padding: 10px;
-  gap: 12px;
-  max-width: 1400px;
-  margin: 0 auto;
-}
-.bord-kolom {
-  flex: 1 1 auto;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 8px; min-width: 0;
-}
-.titel {
-  text-align: center;
-  font-size: 20px; font-weight: bold; line-height: 1.3;
-  letter-spacing: 0.5px;
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
-  flex-shrink: 0;
-}
-.bord-kolom svg {
-  max-height: calc(100vh - 70px);
-  max-width: 100%; height: auto; width: auto;
-  border-radius: 12px; min-height: 0;
-}
-.zij-kolom {
-  flex: 0 0 320px;
-  display: flex; flex-direction: column;
-  gap: 10px; min-height: 0;
-  justify-content: flex-start; padding-top: 6px;
-}
-.controls { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
+/* ===== LAYOUT ===== */
+#gb { display: flex; height: 100vh; padding: 10px; gap: 12px; max-width: 1400px; margin: 0 auto; }
+.bord-kolom { flex: 1 1 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; min-width: 0; }
+.titel { text-align: center; font-size: 20px; font-weight: bold; line-height: 1.3; letter-spacing: 0.5px; text-shadow: 1px 1px 3px rgba(0,0,0,0.4); flex-shrink: 0; }
+.bord-kolom svg { max-height: calc(100vh - 70px); max-width: 100%; height: auto; width: auto; border-radius: 12px; min-height: 0; }
+.zij-kolom { flex: 0 0 330px; display: flex; flex-direction: column; gap: 10px; min-height: 0; justify-content: flex-start; padding-top: 6px; }
+.controls { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
 .knop { padding: 8px 16px; border-radius: 20px; border: none; background: #C84B20; color: white; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Comic Sans MS', cursive; box-shadow: 0 2px 6px rgba(0,0,0,0.25); white-space: nowrap; }
 .knop:hover { background: #A83810; }
 .knop:disabled { opacity: 0.4; cursor: not-allowed; }
-.dobbel-tray { display: flex; align-items: center; gap: 14px; }
-.dobbel-slot { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.muziek-knop { padding: 8px 10px; border-radius: 50%; border: none; background: rgba(255,255,255,0.9); font-size: 16px; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.25); line-height: 1; }
+.dobbel-tray { display: flex; align-items: center; gap: 16px; }
+.dobbel-slot { display: flex; flex-direction: column; align-items: center; gap: 5px; }
 .dobbel-naam { font-size: 10px; color: rgba(255,255,255,0.85); font-weight: 600; }
-.dobbel-paar { display: flex; gap: 5px; }
-.dice { width: 34px; height: 34px; background: linear-gradient(135deg, #FFFDF7, #F0EAD8); border-radius: 7px; border: 1.5px solid #C8B888; box-shadow: 0 3px 6px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.6); display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); padding: 4px; }
-.dice .pip { width: 6px; height: 6px; border-radius: 50%; background: #3A2800; margin: auto; opacity: 0; }
-.dice.rolling { animation: rollDice 0.55s ease-in-out infinite; }
-@keyframes rollDice { 0%{transform:rotate(0deg) scale(1);} 25%{transform:rotate(90deg) scale(1.08);} 50%{transform:rotate(180deg) scale(0.95);} 75%{transform:rotate(270deg) scale(1.08);} 100%{transform:rotate(360deg) scale(1);} }
-.dice.landed { animation: landDice 0.3s ease-out; }
-@keyframes landDice { 0%{transform:scale(1.3) rotate(15deg);} 60%{transform:scale(0.9) rotate(-5deg);} 100%{transform:scale(1) rotate(0deg);} }
-.log {
-  background: rgba(255,255,255,0.9);
-  border-radius: 10px; padding: 0.7rem 0.9rem;
-  font-size: 13px; color: #222;
-  flex: 1 1 auto; min-height: 0; overflow-y: auto; line-height: 1.7;
+.dobbel-paar { display: flex; gap: 10px; }
+
+/* ===== 3D DOBBELSTENEN ===== */
+.d3-wrap { width: 40px; height: 40px; perspective: 260px; }
+.d3 { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transform: rotateX(-18deg) rotateY(24deg); transition: transform 0.05s; }
+.d3 .vlak {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, #FFFDF7, #EDE5CE);
+  border: 1.5px solid #B8A878; border-radius: 7px;
+  display: grid; grid-template-columns: repeat(3,1fr); grid-template-rows: repeat(3,1fr);
+  padding: 5px;
+  box-shadow: inset 0 1px 2px rgba(255,255,255,0.7);
 }
+.d3.nerf .vlak { background: linear-gradient(135deg, #FFE5E0, #F5C0B5); border-color: #C05040; }
+.d3 .vlak.num { display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; color: #3A2800; }
+.d3 .pip { width: 7px; height: 7px; border-radius: 50%; background: #3A2800; margin: auto; opacity: 0; }
+.d3 .pip.aan { opacity: 1; }
+.vlak.voor   { transform: translateZ(20px); }
+.vlak.achter { transform: rotateY(180deg) translateZ(20px); }
+.vlak.rechts { transform: rotateY(90deg) translateZ(20px); }
+.vlak.links  { transform: rotateY(-90deg) translateZ(20px); }
+.vlak.boven  { transform: rotateX(90deg) translateZ(20px); }
+.vlak.onder  { transform: rotateX(-90deg) translateZ(20px); }
+
+.log { background: rgba(255,255,255,0.9); border-radius: 10px; padding: 0.7rem 0.9rem; font-size: 13px; color: #222; flex: 1 1 auto; min-height: 0; overflow-y: auto; line-height: 1.7; }
 .log .verhaal { color: #444; font-style: italic; }
 .log .consequentie { color: #C84B20; font-weight: bold; }
 
-/* ===== WIN OVERLAY ===== */
-#win-overlay {
-  position: fixed; inset: 0; z-index: 200;
-  background: rgba(0,0,0,0.65);
-  display: none;
-  align-items: center; justify-content: center;
-  flex-direction: column;
+/* ===== FLOPPY MODAL ===== */
+#floppy-overlay { position: fixed; inset: 0; z-index: 180; background: rgba(0,0,0,0.55); display: none; align-items: center; justify-content: center; }
+#floppy-overlay.actief { display: flex; }
+.floppy-kaart {
+  background: #C0C0C0;
+  border: 3px solid; border-color: #FFFFFF #404040 #404040 #FFFFFF;
+  width: min(360px, 90vw);
+  font-family: 'Comic Sans MS', cursive;
+  box-shadow: 6px 6px 0 rgba(0,0,0,0.4);
 }
-#win-overlay.actief { display: flex; }
-.win-tekst {
-  color: #FFD700; font-size: 26px; font-weight: bold;
-  text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
-  margin-bottom: 1.2rem; text-align: center;
-  padding: 0 1rem;
+.floppy-titelbalk { background: linear-gradient(90deg, #000080, #1084D0); color: white; padding: 5px 10px; font-size: 13px; font-weight: bold; display: flex; justify-content: space-between; }
+.floppy-inhoud { padding: 1.2rem 1.4rem; font-size: 14px; color: #111; display: flex; gap: 12px; align-items: center; }
+.floppy-icoon { font-size: 34px; }
+.floppy-knoppen { display: flex; justify-content: center; gap: 12px; padding: 0 1rem 1.1rem; }
+.floppy-knoppen button {
+  padding: 6px 22px;
+  background: #C0C0C0;
+  border: 2px solid; border-color: #FFFFFF #404040 #404040 #FFFFFF;
+  font-family: 'Comic Sans MS', cursive; font-size: 13px; cursor: pointer;
 }
-.envelop {
-  font-size: 90px;
-  cursor: pointer;
-  animation: wiebel 1s ease-in-out infinite;
-  filter: drop-shadow(0 0 25px rgba(255,215,0,0.8));
-  transition: transform 0.2s;
-  background: none; border: none;
-}
-.envelop:hover { transform: scale(1.15); }
-@keyframes wiebel {
-  0%,100% { transform: rotate(-4deg); }
-  50% { transform: rotate(4deg); }
-}
-.envelop-hint { color: white; font-size: 14px; margin-top: 0.8rem; opacity: 0.85; }
+.floppy-knoppen button:active { border-color: #404040 #FFFFFF #FFFFFF #404040; }
 
-/* ===== PDF VIEWER ===== */
-#pdf-overlay {
-  position: fixed; inset: 0; z-index: 300;
-  background: rgba(0,0,0,0.85);
-  display: none;
-  flex-direction: column;
-  padding: 16px;
-}
+/* ===== WIN / PDF / CONFETTI ===== */
+#win-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.65); display: none; align-items: center; justify-content: center; flex-direction: column; }
+#win-overlay.actief { display: flex; }
+.win-tekst { color: #FFD700; font-size: 26px; font-weight: bold; text-shadow: 2px 2px 6px rgba(0,0,0,0.6); margin-bottom: 1.2rem; text-align: center; padding: 0 1rem; }
+.envelop { font-size: 90px; cursor: pointer; animation: wiebel 1s ease-in-out infinite; filter: drop-shadow(0 0 25px rgba(255,215,0,0.8)); transition: transform 0.2s; background: none; border: none; }
+.envelop:hover { transform: scale(1.15); }
+@keyframes wiebel { 0%,100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
+.envelop-hint { color: white; font-size: 14px; margin-top: 0.8rem; opacity: 0.85; }
+#pdf-overlay { position: fixed; inset: 0; z-index: 300; background: rgba(0,0,0,0.85); display: none; flex-direction: column; padding: 16px; }
 #pdf-overlay.actief { display: flex; }
-.pdf-balk {
-  display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 10px; gap: 10px;
-}
+.pdf-balk { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 10px; }
 .pdf-balk .titel-klein { color: #FFD700; font-size: 16px; font-weight: bold; }
 .pdf-knoppen { display: flex; gap: 8px; }
-.pdf-knoppen a, .pdf-knoppen button {
-  padding: 7px 14px; border-radius: 16px; border: none;
-  font-family: 'Comic Sans MS', cursive; font-size: 13px; font-weight: bold;
-  cursor: pointer; text-decoration: none;
-}
+.pdf-knoppen a, .pdf-knoppen button { padding: 7px 14px; border-radius: 16px; border: none; font-family: 'Comic Sans MS', cursive; font-size: 13px; font-weight: bold; cursor: pointer; text-decoration: none; }
 .pdf-download { background: #FFD700; color: #333; }
 .pdf-sluit { background: #C84B20; color: white; }
 #pdf-frame { flex: 1; border: none; border-radius: 10px; background: white; }
-
-/* ===== CONFETTI ===== */
-.confetti {
-  position: fixed;
-  width: 10px; height: 14px;
-  top: -20px;
-  z-index: 250;
-  pointer-events: none;
-  animation: valNeer linear forwards;
-}
-@keyframes valNeer {
-  to { transform: translateY(110vh) rotate(720deg); }
-}
+.confetti { position: fixed; width: 10px; height: 14px; top: -20px; z-index: 250; pointer-events: none; animation: valNeer linear forwards; }
+@keyframes valNeer { to { transform: translateY(110vh) rotate(720deg); } }
 
 @media (max-width: 900px) {
   html, body { overflow: auto; }
@@ -177,7 +116,8 @@ body { font-family: 'Comic Sans MS', 'Comic Sans', cursive; background: #2D7A2D;
 </head>
 <body>
 
-<!-- LOGIN -->
+<audio id="muziek" src="muziek.mp3" loop preload="auto"></audio>
+
 <div id="login-overlay">
   <div class="login-kaart">
     <h1 id="login-titel"></h1>
@@ -195,7 +135,6 @@ body { font-family: 'Comic Sans MS', 'Comic Sans', cursive; background: #2D7A2D;
   </div>
 </div>
 
-<!-- SPEL -->
 <div id="gb">
   <div class="bord-kolom">
     <div class="titel" id="titel"></div>
@@ -204,19 +143,20 @@ body { font-family: 'Comic Sans MS', 'Comic Sans', cursive; background: #2D7A2D;
   <div class="zij-kolom">
     <div class="controls">
       <button class="knop" id="knop" onclick="gooi()">&#127922; Gooi!</button>
+      <button class="muziek-knop" id="muziek-knop" onclick="toggleMuziek()" title="Muziek aan/uit">&#128266;</button>
       <div class="dobbel-tray">
         <div class="dobbel-slot">
           <div class="dobbel-naam" id="naam-speler">JIJ</div>
           <div class="dobbel-paar">
-            <div class="dice" id="dice-jij-1"></div>
-            <div class="dice" id="dice-jij-2"></div>
+            <div class="d3-wrap"><div class="d3" id="d3-jij-1"></div></div>
+            <div class="d3-wrap"><div class="d3" id="d3-jij-2"></div></div>
           </div>
         </div>
         <div class="dobbel-slot">
           <div class="dobbel-naam">COMPUTER</div>
           <div class="dobbel-paar">
-            <div class="dice" id="dice-pc-1"></div>
-            <div class="dice" id="dice-pc-2"></div>
+            <div class="d3-wrap"><div class="d3" id="d3-pc-1"></div></div>
+            <div class="d3-wrap"><div class="d3" id="d3-pc-2"></div></div>
           </div>
         </div>
       </div>
@@ -225,14 +165,27 @@ body { font-family: 'Comic Sans MS', 'Comic Sans', cursive; background: #2D7A2D;
   </div>
 </div>
 
-<!-- WIN OVERLAY -->
+<!-- FLOPPY GRAP -->
+<div id="floppy-overlay">
+  <div class="floppy-kaart">
+    <div class="floppy-titelbalk"><span>Systeemmelding</span><span>&#10005;</span></div>
+    <div class="floppy-inhoud">
+      <div class="floppy-icoon">&#128190;</div>
+      <div>Plz nerf de floppydiskdriver</div>
+    </div>
+    <div class="floppy-knoppen">
+      <button onclick="floppyKeuze(true)">Bevestig</button>
+      <button onclick="floppyKeuze(false)">Nee</button>
+    </div>
+  </div>
+</div>
+
 <div id="win-overlay">
   <div class="win-tekst" id="win-tekst"></div>
   <button class="envelop" onclick="openUitnodiging()">&#9993;&#65039;</button>
   <div class="envelop-hint">Klik op de envelop om je uitnodiging te openen!</div>
 </div>
 
-<!-- PDF VIEWER -->
 <div id="pdf-overlay">
   <div class="pdf-balk">
     <div class="titel-klein" id="pdf-titel"></div>
@@ -255,47 +208,74 @@ const SPELERS = {
   'yorick':    { ww: 'YorickX',    pdf: 'uitnodigingen/yorick.pdf' },
 };
 
-let ingelogdeSpeler = null; // { naam (weergave), pdf }
+let ingelogdeSpeler = null;
 
 function probeerLogin(){
   const naamInput = document.getElementById('inp-naam').value.trim();
   const ww = document.getElementById('inp-ww').value;
   const sleutel = naamInput.toLowerCase();
   const fout = document.getElementById('login-fout');
-
-  if(!SPELERS[sleutel]){
-    fout.textContent = 'Deze naam staat niet op de gastenlijst...';
-    return;
-  }
-  if(SPELERS[sleutel].ww !== ww){
-    fout.textContent = 'Onjuist wachtwoord, probeer opnieuw!';
-    return;
-  }
+  if(!SPELERS[sleutel]){ fout.textContent = 'Deze naam staat niet op de gastenlijst...'; return; }
+  if(SPELERS[sleutel].ww !== ww){ fout.textContent = 'Onjuist wachtwoord, probeer opnieuw!'; return; }
   const weergaveNaam = naamInput.charAt(0).toUpperCase() + naamInput.slice(1).toLowerCase();
   ingelogdeSpeler = { naam: weergaveNaam, pdf: SPELERS[sleutel].pdf };
   document.getElementById('login-overlay').style.display = 'none';
   document.getElementById('naam-speler').textContent = weergaveNaam.toUpperCase();
   setLog('Welkom ' + weergaveNaam + '! Gooi de dobbelstenen om te beginnen. Versla de computer en win jouw uitnodiging!');
 }
-
-// Enter-toets werkt ook
 document.addEventListener('DOMContentLoaded', () => {
   ['inp-naam','inp-ww'].forEach(id => {
-    document.getElementById(id).addEventListener('keydown', e => {
-      if(e.key === 'Enter') probeerLogin();
-    });
+    document.getElementById(id).addEventListener('keydown', e => { if(e.key === 'Enter') probeerLogin(); });
   });
 });
 
-// ===== WIN SEQUENCE =====
+// ===== MUZIEK =====
+let muziekGestart = false;
+function startMuziekIndienNodig(){
+  if(muziekGestart) return;
+  const audio = document.getElementById('muziek');
+  audio.volume = 0.5;
+  audio.play().then(() => { muziekGestart = true; }).catch(() => {});
+}
+function toggleMuziek(){
+  const audio = document.getElementById('muziek');
+  const knop = document.getElementById('muziek-knop');
+  if(!muziekGestart){ startMuziekIndienNodig(); knop.innerHTML = '&#128266;'; return; }
+  audio.muted = !audio.muted;
+  knop.innerHTML = audio.muted ? '&#128263;' : '&#128266;';
+}
+
+// ===== FLOPPY GRAP =====
+let beurtTeller = 0;
+let floppyGetoond = false;
+let pcNerf = false;
+let floppyResolver = null;
+
+function toonFloppy(){
+  return new Promise(resolve => {
+    floppyResolver = resolve;
+    document.getElementById('floppy-overlay').classList.add('actief');
+  });
+}
+function floppyKeuze(bevestigd){
+  document.getElementById('floppy-overlay').classList.remove('actief');
+  if(bevestigd){
+    pcNerf = true;
+    document.getElementById('d3-pc-1').classList.add('nerf');
+    document.getElementById('d3-pc-2').classList.add('nerf');
+    logMsg('&#9888;&#65039; <strong>De floppydiskdriver is generfd! De computer gooit vanaf nu met 8-zijdige dobbelstenen...</strong>');
+  } else {
+    logMsg('<em>De floppydiskdriver blijft ongemoeid.</em>');
+  }
+  if(floppyResolver){ floppyResolver(); floppyResolver = null; }
+}
+
+// ===== WIN =====
 function startWinSequence(){
   maakConfetti();
   document.getElementById('win-tekst').textContent = 'Gefeliciteerd ' + ingelogdeSpeler.naam + '! Je hebt gewonnen!';
-  setTimeout(() => {
-    document.getElementById('win-overlay').classList.add('actief');
-  }, 800);
+  setTimeout(() => { document.getElementById('win-overlay').classList.add('actief'); }, 800);
 }
-
 function maakConfetti(){
   const kleuren = ['#FF0000','#FF8C00','#FFD700','#00AA00','#1E90FF','#8A2BE2','#FF1493','#00CED1'];
   for(let i=0; i<120; i++){
@@ -305,12 +285,10 @@ function maakConfetti(){
     c.style.background = kleuren[Math.floor(Math.random()*kleuren.length)];
     c.style.animationDuration = (2 + Math.random()*2.5) + 's';
     c.style.animationDelay = (Math.random()*1.5) + 's';
-    c.style.transform = 'rotate(' + Math.random()*360 + 'deg)';
     document.body.appendChild(c);
     setTimeout(() => c.remove(), 6000);
   }
 }
-
 function openUitnodiging(){
   document.getElementById('win-overlay').classList.remove('actief');
   const pdfPad = ingelogdeSpeler.pdf;
@@ -321,7 +299,6 @@ function openUitnodiging(){
   dl.setAttribute('download', 'Uitnodiging_' + ingelogdeSpeler.naam + '.pdf');
   document.getElementById('pdf-overlay').classList.add('actief');
 }
-
 function sluitPdf(){
   document.getElementById('pdf-overlay').classList.remove('actief');
   document.getElementById('pdf-frame').src = '';
@@ -495,8 +472,9 @@ function bouwBord() {
   maakPionnen();
 }
 
-// ===== PIONNEN MET HOBBEL-ANIMATIE =====
+// ===== PIONNEN =====
 let pionEls = {};
+let staat={posities:{jij:0,pc:0},wacht:{jij:0,pc:0},bezig:false,klaar:false};
 
 function maakPionnen(){
   const svg=document.getElementById('svg');
@@ -568,26 +546,87 @@ function grootSprong(sp, vanIdx, naarIdx, duur){
 async function loopNaar(sp, vanIdx, naarIdx){
   if(vanIdx === naarIdx) return;
   const afstand = Math.abs(naarIdx - vanIdx);
-  if(afstand > 12){
-    await grootSprong(sp, vanIdx, naarIdx, 700);
-    return;
-  }
+  if(afstand > 12){ await grootSprong(sp, vanIdx, naarIdx, 700); return; }
   const richting = naarIdx > vanIdx ? 1 : -1;
   for(let i = vanIdx; i !== naarIdx; i += richting){
     await hobbelStap(sp, i, i+richting, 150);
   }
 }
 
-const PIP_PATRONEN={1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8]};
-function teken9Pips(d,w){d.innerHTML='';const a=new Set(PIP_PATRONEN[w]||[4]);for(let i=0;i<9;i++){const p=document.createElement('div');p.className='pip';if(a.has(i))p.style.opacity='1';d.appendChild(p);}}
-function zetDobbelsteen(id,w){teken9Pips(document.getElementById(id),w);}
-async function animeerWorp(ids,eind){
-  const els=ids.map(id=>document.getElementById(id));
-  els.forEach(el=>el.classList.add('rolling'));
-  const iv=setInterval(()=>{els.forEach(el=>teken9Pips(el,1+Math.floor(Math.random()*6)));},90);
-  await new Promise(r=>setTimeout(r,650));
-  clearInterval(iv);
-  els.forEach((el,i)=>{el.classList.remove('rolling');teken9Pips(el,eind[i]);el.classList.add('landed');setTimeout(()=>el.classList.remove('landed'),300);});
+// ===== 3D DOBBELSTENEN =====
+const PIP_PATRONEN={1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8],7:[0,2,3,4,5,6,8],8:[0,1,2,3,5,6,7,8]};
+const VLAK_KLASSEN = ['voor','achter','rechts','links','boven','onder'];
+
+function maakVlakInhoud(vlak, waarde){
+  vlak.classList.remove('num');
+  vlak.innerHTML = '';
+  if(waarde > 6){
+    // Getallen voor 7 en 8 (d8 modus)
+    vlak.classList.add('num');
+    vlak.textContent = waarde;
+    return;
+  }
+  const actief = new Set(PIP_PATRONEN[waarde]||[4]);
+  for(let i=0;i<9;i++){
+    const p=document.createElement('div');
+    p.className='pip'+(actief.has(i)?' aan':'');
+    vlak.appendChild(p);
+  }
+}
+
+function initDobbelsteen(id){
+  const d = document.getElementById(id);
+  d.innerHTML = '';
+  VLAK_KLASSEN.forEach((kl, i) => {
+    const v = document.createElement('div');
+    v.className = 'vlak ' + kl;
+    maakVlakInhoud(v, i+1);
+    d.appendChild(v);
+  });
+  d.dataset.rx = -18; d.dataset.ry = 24;
+}
+
+function zetDobbelsteenWaarde(id, waarde){
+  const d = document.getElementById(id);
+  const voor = d.querySelector('.vlak.voor');
+  maakVlakInhoud(voor, waarde);
+}
+
+function rol3D(id, eindWaarde, maxOgen){
+  return new Promise(resolve => {
+    const d = document.getElementById(id);
+    // Zijvlakken krijgen willekeurige waardes voor het rol-effect
+    d.querySelectorAll('.vlak').forEach(v => {
+      if(!v.classList.contains('voor')){
+        maakVlakInhoud(v, 1+Math.floor(Math.random()*maxOgen));
+      }
+    });
+    zetDobbelsteenWaarde(id, eindWaarde);
+
+    // Meerdere volledige omwentelingen, eindigend op de voorkant
+    const rx = parseFloat(d.dataset.rx);
+    const ry = parseFloat(d.dataset.ry);
+    const draaiX = 360 * (2 + Math.floor(Math.random()*2));
+    const draaiY = 360 * (2 + Math.floor(Math.random()*2));
+    const nieuwRx = rx + draaiX;
+    const nieuwRy = ry + draaiY;
+
+    d.style.transition = 'transform 0.9s cubic-bezier(0.25, 0.9, 0.35, 1.05)';
+    d.style.transform = 'rotateX(' + nieuwRx + 'deg) rotateY(' + nieuwRy + 'deg)';
+    d.dataset.rx = nieuwRx;
+    d.dataset.ry = nieuwRy;
+
+    setTimeout(() => resolve(), 950);
+  });
+}
+
+async function animeerWorp(sp, waarden){
+  const ids = sp === 'jij' ? ['d3-jij-1','d3-jij-2'] : ['d3-pc-1','d3-pc-2'];
+  const maxOgen = (sp === 'pc' && pcNerf) ? 8 : 6;
+  await Promise.all([
+    rol3D(ids[0], waarden[0], maxOgen),
+    rol3D(ids[1], waarden[1], maxOgen),
+  ]);
 }
 
 function logMsg(msg){const el=document.getElementById('log');el.innerHTML+='<br>'+msg;el.scrollTop=el.scrollHeight;}
@@ -602,11 +641,13 @@ function logVakMsg(naam,worp,pos,vakdata){
   el.scrollTop=el.scrollHeight;
 }
 function setLog(msg){document.getElementById('log').innerHTML=msg;}
-function werpTotaal(){const a=1+Math.floor(Math.random()*6),b=1+Math.floor(Math.random()*6);return{a,b,totaal:a+b};}
 
-let staat={posities:{jij:0,pc:0},wacht:{jij:0,pc:0},bezig:false,klaar:false};
-
-const DICE_IDS = { jij: ['dice-jij-1','dice-jij-2'], pc: ['dice-pc-1','dice-pc-2'] };
+function werpVoor(sp){
+  const max = (sp === 'pc' && pcNerf) ? 8 : 6;
+  const a = 1+Math.floor(Math.random()*max);
+  const b = 1+Math.floor(Math.random()*max);
+  return {a, b, totaal: a+b};
+}
 
 function spelerNaam(sp){
   if(sp==='pc') return 'Computer';
@@ -627,10 +668,7 @@ async function verwerkZet(sp, eersteWorp){
   let pos = oudePos + worp;
   let stuiterde = false;
 
-  if(pos>63){
-    pos = 63-(pos-63);
-    stuiterde = true;
-  }
+  if(pos>63){ pos = 63-(pos-63); stuiterde = true; }
 
   if(stuiterde){
     await loopNaar(sp, oudePos, 63);
@@ -654,8 +692,8 @@ async function verwerkZet(sp, eersteWorp){
 
     await new Promise(r=>setTimeout(r,450));
 
-    const {a,b,totaal} = werpTotaal();
-    await animeerWorp(DICE_IDS[sp],[a,b]);
+    const {a,b,totaal} = werpVoor(sp);
+    await animeerWorp(sp,[a,b]);
     worp = totaal;
     logMsg('<em>\u{1F3B2} '+naam+' gooit opnieuw: '+worp+'!</em>');
 
@@ -692,10 +730,20 @@ async function gooi(){
   staat.bezig=true;
   document.getElementById('knop').disabled=true;
 
+  startMuziekIndienNodig();
+
   try {
-    const {a:j1,b:j2,totaal:worp1} = werpTotaal();
-    await animeerWorp(DICE_IDS.jij,[j1,j2]);
-    const klaar1 = await verwerkZet('jij', worp1);
+    beurtTeller++;
+
+    // Floppy grap bij beurt 2
+    if(beurtTeller === 2 && !floppyGetoond){
+      floppyGetoond = true;
+      await toonFloppy();
+    }
+
+    const w1 = werpVoor('jij');
+    await animeerWorp('jij',[w1.a,w1.b]);
+    const klaar1 = await verwerkZet('jij', w1.totaal);
     if(klaar1){
       logMsg('\u{1F3C6} <strong>Gefeliciteerd '+ingelogdeSpeler.naam+', jij wint!</strong>');
       eindeSpel();
@@ -705,9 +753,9 @@ async function gooi(){
 
     await new Promise(r=>setTimeout(r,500));
 
-    const {a:p1,b:p2,totaal:worp2} = werpTotaal();
-    await animeerWorp(DICE_IDS.pc,[p1,p2]);
-    const klaar2 = await verwerkZet('pc', worp2);
+    const w2 = werpVoor('pc');
+    await animeerWorp('pc',[w2.a,w2.b]);
+    const klaar2 = await verwerkZet('pc', w2.totaal);
     if(klaar2){
       logMsg('\u{1F4BB} <strong>De computer wint dit keer! Probeer het opnieuw om je uitnodiging te winnen...</strong>');
       eindeSpel();
@@ -730,14 +778,21 @@ function eindeSpel(){
 }
 function herstart(){
   staat={posities:{jij:0,pc:0},wacht:{jij:0,pc:0},bezig:false,klaar:false};
-  setLog('Nieuw spel! Gooi de dobbelstenen om te beginnen.');
+  // Nerf en beurtteller blijven bewust behouden over potjes heen? Nee: reset alles behalve floppyGetoond
+  // De grap komt maar 1x per sessie; de nerf blijft actief als er op Bevestig is geklikt.
+  beurtTeller = 0;
+  setLog('Nieuw spel! Gooi de dobbelstenen om te beginnen.' + (pcNerf ? ' (De floppydiskdriver is nog steeds generfd...)' : ''));
   const k=document.getElementById('knop');k.innerHTML='\u{1F3B2} Gooi!';k.onclick=gooi;k.disabled=false;
-  ['dice-jij-1','dice-jij-2','dice-pc-1','dice-pc-2'].forEach(id=>zetDobbelsteen(id,1));
+  ['d3-jij-1','d3-jij-2','d3-pc-1','d3-pc-2'].forEach(initDobbelsteen);
+  if(pcNerf){
+    document.getElementById('d3-pc-1').classList.add('nerf');
+    document.getElementById('d3-pc-2').classList.add('nerf');
+  }
   maakPionnen();
 }
 
 bouwBord();
-['dice-jij-1','dice-jij-2','dice-pc-1','dice-pc-2'].forEach(id=>zetDobbelsteen(id,1));
+['d3-jij-1','d3-jij-2','d3-pc-1','d3-pc-2'].forEach(initDobbelsteen);
 </script>
 </body>
 </html>
