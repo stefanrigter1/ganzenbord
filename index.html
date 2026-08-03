@@ -32,14 +32,13 @@ body { font-family: 'Comic Sans MS', 'Comic Sans', cursive; background: #2D7A2D;
 .knop:hover { background: #A83810; }
 .knop:disabled { opacity: 0.4; cursor: not-allowed; }
 .muziek-knop { padding: 8px 10px; border-radius: 50%; border: none; background: rgba(255,255,255,0.9); font-size: 16px; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.25); line-height: 1; }
-.dobbel-tray { display: flex; align-items: center; gap: 16px; }
+.dobbel-tray { display: flex; align-items: center; gap: 18px; }
 .dobbel-slot { display: flex; flex-direction: column; align-items: center; gap: 5px; }
 .dobbel-naam { font-size: 10px; color: rgba(255,255,255,0.85); font-weight: 600; }
-.dobbel-paar { display: flex; gap: 10px; }
 
-/* ===== 3D DOBBELSTENEN ===== */
-.d3-wrap { width: 40px; height: 40px; perspective: 260px; }
-.d3 { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transform: rotateX(-18deg) rotateY(24deg); transition: transform 0.05s; }
+/* ===== 3D KUBUS DOBBELSTEEN (d6) ===== */
+.d3-wrap { width: 42px; height: 42px; perspective: 260px; }
+.d3 { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transform: rotateX(-18deg) rotateY(24deg); }
 .d3 .vlak {
   position: absolute; inset: 0;
   background: linear-gradient(135deg, #FFFDF7, #EDE5CE);
@@ -48,16 +47,32 @@ body { font-family: 'Comic Sans MS', 'Comic Sans', cursive; background: #2D7A2D;
   padding: 5px;
   box-shadow: inset 0 1px 2px rgba(255,255,255,0.7);
 }
-.d3.nerf .vlak { background: linear-gradient(135deg, #FFE5E0, #F5C0B5); border-color: #C05040; }
-.d3 .vlak.num { display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; color: #3A2800; }
 .d3 .pip { width: 7px; height: 7px; border-radius: 50%; background: #3A2800; margin: auto; opacity: 0; }
 .d3 .pip.aan { opacity: 1; }
-.vlak.voor   { transform: translateZ(20px); }
-.vlak.achter { transform: rotateY(180deg) translateZ(20px); }
-.vlak.rechts { transform: rotateY(90deg) translateZ(20px); }
-.vlak.links  { transform: rotateY(-90deg) translateZ(20px); }
-.vlak.boven  { transform: rotateX(90deg) translateZ(20px); }
-.vlak.onder  { transform: rotateX(-90deg) translateZ(20px); }
+.vlak.voor   { transform: translateZ(21px); }
+.vlak.achter { transform: rotateY(180deg) translateZ(21px); }
+.vlak.rechts { transform: rotateY(90deg) translateZ(21px); }
+.vlak.links  { transform: rotateY(-90deg) translateZ(21px); }
+.vlak.boven  { transform: rotateX(90deg) translateZ(21px); }
+.vlak.onder  { transform: rotateX(-90deg) translateZ(21px); }
+
+/* ===== D8 OCTAEDER (diamant) ===== */
+.d8-wrap { width: 46px; height: 52px; }
+.d8 { width: 100%; height: 100%; position: relative; transform-origin: center; }
+.d8 svg { width: 100%; height: 100%; display: block; filter: drop-shadow(0 3px 5px rgba(0,0,0,0.35)); }
+.d8-getal {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; font-weight: bold; color: #5A1408;
+  padding-bottom: 8px;
+}
+.d8.rollen { animation: d8spin 0.9s cubic-bezier(0.3, 0.8, 0.4, 1.05); }
+@keyframes d8spin {
+  0%   { transform: rotate(0deg) scale(1); }
+  40%  { transform: rotate(340deg) scale(1.22); }
+  75%  { transform: rotate(650deg) scale(0.92); }
+  100% { transform: rotate(720deg) scale(1); }
+}
 
 .log { background: rgba(255,255,255,0.9); border-radius: 10px; padding: 0.7rem 0.9rem; font-size: 13px; color: #222; flex: 1 1 auto; min-height: 0; overflow-y: auto; line-height: 1.7; }
 .log .verhaal { color: #444; font-style: italic; }
@@ -66,23 +81,12 @@ body { font-family: 'Comic Sans MS', 'Comic Sans', cursive; background: #2D7A2D;
 /* ===== FLOPPY MODAL ===== */
 #floppy-overlay { position: fixed; inset: 0; z-index: 180; background: rgba(0,0,0,0.55); display: none; align-items: center; justify-content: center; }
 #floppy-overlay.actief { display: flex; }
-.floppy-kaart {
-  background: #C0C0C0;
-  border: 3px solid; border-color: #FFFFFF #404040 #404040 #FFFFFF;
-  width: min(360px, 90vw);
-  font-family: 'Comic Sans MS', cursive;
-  box-shadow: 6px 6px 0 rgba(0,0,0,0.4);
-}
+.floppy-kaart { background: #C0C0C0; border: 3px solid; border-color: #FFFFFF #404040 #404040 #FFFFFF; width: min(360px, 90vw); font-family: 'Comic Sans MS', cursive; box-shadow: 6px 6px 0 rgba(0,0,0,0.4); }
 .floppy-titelbalk { background: linear-gradient(90deg, #000080, #1084D0); color: white; padding: 5px 10px; font-size: 13px; font-weight: bold; display: flex; justify-content: space-between; }
 .floppy-inhoud { padding: 1.2rem 1.4rem; font-size: 14px; color: #111; display: flex; gap: 12px; align-items: center; }
 .floppy-icoon { font-size: 34px; }
 .floppy-knoppen { display: flex; justify-content: center; gap: 12px; padding: 0 1rem 1.1rem; }
-.floppy-knoppen button {
-  padding: 6px 22px;
-  background: #C0C0C0;
-  border: 2px solid; border-color: #FFFFFF #404040 #404040 #FFFFFF;
-  font-family: 'Comic Sans MS', cursive; font-size: 13px; cursor: pointer;
-}
+.floppy-knoppen button { padding: 6px 22px; background: #C0C0C0; border: 2px solid; border-color: #FFFFFF #404040 #404040 #FFFFFF; font-family: 'Comic Sans MS', cursive; font-size: 13px; cursor: pointer; }
 .floppy-knoppen button:active { border-color: #404040 #FFFFFF #FFFFFF #404040; }
 
 /* ===== WIN / PDF / CONFETTI ===== */
@@ -147,16 +151,12 @@ body { font-family: 'Comic Sans MS', 'Comic Sans', cursive; background: #2D7A2D;
       <div class="dobbel-tray">
         <div class="dobbel-slot">
           <div class="dobbel-naam" id="naam-speler">JIJ</div>
-          <div class="dobbel-paar">
-            <div class="d3-wrap"><div class="d3" id="d3-jij-1"></div></div>
-            <div class="d3-wrap"><div class="d3" id="d3-jij-2"></div></div>
-          </div>
+          <div class="d3-wrap"><div class="d3" id="d3-jij"></div></div>
         </div>
         <div class="dobbel-slot">
           <div class="dobbel-naam">COMPUTER</div>
-          <div class="dobbel-paar">
-            <div class="d3-wrap"><div class="d3" id="d3-pc-1"></div></div>
-            <div class="d3-wrap"><div class="d3" id="d3-pc-2"></div></div>
+          <div id="pc-dobbel-houder">
+            <div class="d3-wrap"><div class="d3" id="d3-pc"></div></div>
           </div>
         </div>
       </div>
@@ -165,7 +165,6 @@ body { font-family: 'Comic Sans MS', 'Comic Sans', cursive; background: #2D7A2D;
   </div>
 </div>
 
-<!-- FLOPPY GRAP -->
 <div id="floppy-overlay">
   <div class="floppy-kaart">
     <div class="floppy-titelbalk"><span>Systeemmelding</span><span>&#10005;</span></div>
@@ -221,7 +220,7 @@ function probeerLogin(){
   ingelogdeSpeler = { naam: weergaveNaam, pdf: SPELERS[sleutel].pdf };
   document.getElementById('login-overlay').style.display = 'none';
   document.getElementById('naam-speler').textContent = weergaveNaam.toUpperCase();
-  setLog('Welkom ' + weergaveNaam + '! Gooi de dobbelstenen om te beginnen. Versla de computer en win jouw uitnodiging!');
+  setLog('Welkom ' + weergaveNaam + '! Gooi de dobbelsteen om te beginnen. Versla de computer en win jouw uitnodiging!');
 }
 document.addEventListener('DOMContentLoaded', () => {
   ['inp-naam','inp-ww'].forEach(id => {
@@ -261,9 +260,8 @@ function floppyKeuze(bevestigd){
   document.getElementById('floppy-overlay').classList.remove('actief');
   if(bevestigd){
     pcNerf = true;
-    document.getElementById('d3-pc-1').classList.add('nerf');
-    document.getElementById('d3-pc-2').classList.add('nerf');
-    logMsg('&#9888;&#65039; <strong>De floppydiskdriver is generfd! De computer gooit vanaf nu met 8-zijdige dobbelstenen...</strong>');
+    bouwPcDobbelsteen();
+    logMsg('&#9888;&#65039; <strong>De floppydiskdriver is generfd! De computer gooit vanaf nu met een 8-zijdige dobbelsteen...</strong>');
   } else {
     logMsg('<em>De floppydiskdriver blijft ongemoeid.</em>');
   }
@@ -553,19 +551,12 @@ async function loopNaar(sp, vanIdx, naarIdx){
   }
 }
 
-// ===== 3D DOBBELSTENEN =====
-const PIP_PATRONEN={1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8],7:[0,2,3,4,5,6,8],8:[0,1,2,3,5,6,7,8]};
+// ===== DOBBELSTENEN =====
+const PIP_PATRONEN={1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8]};
 const VLAK_KLASSEN = ['voor','achter','rechts','links','boven','onder'];
 
 function maakVlakInhoud(vlak, waarde){
-  vlak.classList.remove('num');
   vlak.innerHTML = '';
-  if(waarde > 6){
-    // Getallen voor 7 en 8 (d8 modus)
-    vlak.classList.add('num');
-    vlak.textContent = waarde;
-    return;
-  }
   const actief = new Set(PIP_PATRONEN[waarde]||[4]);
   for(let i=0;i<9;i++){
     const p=document.createElement('div');
@@ -574,8 +565,9 @@ function maakVlakInhoud(vlak, waarde){
   }
 }
 
-function initDobbelsteen(id){
+function initKubus(id){
   const d = document.getElementById(id);
+  if(!d) return;
   d.innerHTML = '';
   VLAK_KLASSEN.forEach((kl, i) => {
     const v = document.createElement('div');
@@ -584,32 +576,24 @@ function initDobbelsteen(id){
     d.appendChild(v);
   });
   d.dataset.rx = -18; d.dataset.ry = 24;
+  d.style.transform = 'rotateX(-18deg) rotateY(24deg)';
 }
 
-function zetDobbelsteenWaarde(id, waarde){
-  const d = document.getElementById(id);
-  const voor = d.querySelector('.vlak.voor');
-  maakVlakInhoud(voor, waarde);
-}
-
-function rol3D(id, eindWaarde, maxOgen){
+function rolKubus(id, eindWaarde){
   return new Promise(resolve => {
     const d = document.getElementById(id);
-    // Zijvlakken krijgen willekeurige waardes voor het rol-effect
     d.querySelectorAll('.vlak').forEach(v => {
       if(!v.classList.contains('voor')){
-        maakVlakInhoud(v, 1+Math.floor(Math.random()*maxOgen));
+        maakVlakInhoud(v, 1+Math.floor(Math.random()*6));
       }
     });
-    zetDobbelsteenWaarde(id, eindWaarde);
+    const voor = d.querySelector('.vlak.voor');
+    maakVlakInhoud(voor, eindWaarde);
 
-    // Meerdere volledige omwentelingen, eindigend op de voorkant
     const rx = parseFloat(d.dataset.rx);
     const ry = parseFloat(d.dataset.ry);
-    const draaiX = 360 * (2 + Math.floor(Math.random()*2));
-    const draaiY = 360 * (2 + Math.floor(Math.random()*2));
-    const nieuwRx = rx + draaiX;
-    const nieuwRy = ry + draaiY;
+    const nieuwRx = rx + 360 * (2 + Math.floor(Math.random()*2));
+    const nieuwRy = ry + 360 * (2 + Math.floor(Math.random()*2));
 
     d.style.transition = 'transform 0.9s cubic-bezier(0.25, 0.9, 0.35, 1.05)';
     d.style.transform = 'rotateX(' + nieuwRx + 'deg) rotateY(' + nieuwRy + 'deg)';
@@ -620,13 +604,55 @@ function rol3D(id, eindWaarde, maxOgen){
   });
 }
 
-async function animeerWorp(sp, waarden){
-  const ids = sp === 'jij' ? ['d3-jij-1','d3-jij-2'] : ['d3-pc-1','d3-pc-2'];
-  const maxOgen = (sp === 'pc' && pcNerf) ? 8 : 6;
-  await Promise.all([
-    rol3D(ids[0], waarden[0], maxOgen),
-    rol3D(ids[1], waarden[1], maxOgen),
-  ]);
+// D8: echte diamant/octaeder-vorm
+function bouwPcDobbelsteen(){
+  const houder = document.getElementById('pc-dobbel-houder');
+  if(pcNerf){
+    houder.innerHTML =
+      '<div class="d8-wrap"><div class="d8" id="d8-pc">' +
+      '<svg viewBox="0 0 46 52">' +
+      '<polygon points="23,1 45,26 23,51 1,26" fill="#E85838" stroke="#8A2408" stroke-width="1.5"/>' +
+      '<polygon points="23,1 45,26 23,26" fill="#F07850" stroke="#8A2408" stroke-width="0.8"/>' +
+      '<polygon points="23,1 1,26 23,26" fill="#D84828" stroke="#8A2408" stroke-width="0.8"/>' +
+      '<line x1="1" y1="26" x2="45" y2="26" stroke="#8A2408" stroke-width="1.2"/>' +
+      '<line x1="23" y1="1" x2="23" y2="26" stroke="#8A2408" stroke-width="0.8"/>' +
+      '<polygon points="23,1 34,13 23,10 12,13" fill="rgba(255,255,255,0.25)"/>' +
+      '</svg>' +
+      '<div class="d8-getal" id="d8-pc-getal">1</div>' +
+      '</div></div>';
+  } else {
+    houder.innerHTML = '<div class="d3-wrap"><div class="d3" id="d3-pc"></div></div>';
+    initKubus('d3-pc');
+  }
+}
+
+function rolD8(eindWaarde){
+  return new Promise(resolve => {
+    const d = document.getElementById('d8-pc');
+    const getal = document.getElementById('d8-pc-getal');
+    d.classList.remove('rollen');
+    void d.offsetWidth; // reflow om animatie te herstarten
+    d.classList.add('rollen');
+
+    const iv = setInterval(() => {
+      getal.textContent = 1+Math.floor(Math.random()*8);
+    }, 80);
+
+    setTimeout(() => {
+      clearInterval(iv);
+      getal.textContent = eindWaarde;
+      setTimeout(() => resolve(), 150);
+    }, 800);
+  });
+}
+
+async function animeerWorp(sp, waarde){
+  if(sp === 'jij'){
+    await rolKubus('d3-jij', waarde);
+  } else {
+    if(pcNerf) await rolD8(waarde);
+    else await rolKubus('d3-pc', waarde);
+  }
 }
 
 function logMsg(msg){const el=document.getElementById('log');el.innerHTML+='<br>'+msg;el.scrollTop=el.scrollHeight;}
@@ -642,11 +668,10 @@ function logVakMsg(naam,worp,pos,vakdata){
 }
 function setLog(msg){document.getElementById('log').innerHTML=msg;}
 
+// Eén dobbelsteen per beurt: 1-6 (of 1-8 voor generfde computer)
 function werpVoor(sp){
   const max = (sp === 'pc' && pcNerf) ? 8 : 6;
-  const a = 1+Math.floor(Math.random()*max);
-  const b = 1+Math.floor(Math.random()*max);
-  return {a, b, totaal: a+b};
+  return 1+Math.floor(Math.random()*max);
 }
 
 function spelerNaam(sp){
@@ -692,9 +717,8 @@ async function verwerkZet(sp, eersteWorp){
 
     await new Promise(r=>setTimeout(r,450));
 
-    const {a,b,totaal} = werpVoor(sp);
-    await animeerWorp(sp,[a,b]);
-    worp = totaal;
+    worp = werpVoor(sp);
+    await animeerWorp(sp, worp);
     logMsg('<em>\u{1F3B2} '+naam+' gooit opnieuw: '+worp+'!</em>');
 
     let np = gp + worp;
@@ -735,15 +759,14 @@ async function gooi(){
   try {
     beurtTeller++;
 
-    // Floppy grap bij beurt 2
     if(beurtTeller === 2 && !floppyGetoond){
       floppyGetoond = true;
       await toonFloppy();
     }
 
     const w1 = werpVoor('jij');
-    await animeerWorp('jij',[w1.a,w1.b]);
-    const klaar1 = await verwerkZet('jij', w1.totaal);
+    await animeerWorp('jij', w1);
+    const klaar1 = await verwerkZet('jij', w1);
     if(klaar1){
       logMsg('\u{1F3C6} <strong>Gefeliciteerd '+ingelogdeSpeler.naam+', jij wint!</strong>');
       eindeSpel();
@@ -754,8 +777,8 @@ async function gooi(){
     await new Promise(r=>setTimeout(r,500));
 
     const w2 = werpVoor('pc');
-    await animeerWorp('pc',[w2.a,w2.b]);
-    const klaar2 = await verwerkZet('pc', w2.totaal);
+    await animeerWorp('pc', w2);
+    const klaar2 = await verwerkZet('pc', w2);
     if(klaar2){
       logMsg('\u{1F4BB} <strong>De computer wint dit keer! Probeer het opnieuw om je uitnodiging te winnen...</strong>');
       eindeSpel();
@@ -778,21 +801,17 @@ function eindeSpel(){
 }
 function herstart(){
   staat={posities:{jij:0,pc:0},wacht:{jij:0,pc:0},bezig:false,klaar:false};
-  // Nerf en beurtteller blijven bewust behouden over potjes heen? Nee: reset alles behalve floppyGetoond
-  // De grap komt maar 1x per sessie; de nerf blijft actief als er op Bevestig is geklikt.
   beurtTeller = 0;
-  setLog('Nieuw spel! Gooi de dobbelstenen om te beginnen.' + (pcNerf ? ' (De floppydiskdriver is nog steeds generfd...)' : ''));
+  setLog('Nieuw spel! Gooi de dobbelsteen om te beginnen.' + (pcNerf ? ' (De floppydiskdriver is nog steeds generfd...)' : ''));
   const k=document.getElementById('knop');k.innerHTML='\u{1F3B2} Gooi!';k.onclick=gooi;k.disabled=false;
-  ['d3-jij-1','d3-jij-2','d3-pc-1','d3-pc-2'].forEach(initDobbelsteen);
-  if(pcNerf){
-    document.getElementById('d3-pc-1').classList.add('nerf');
-    document.getElementById('d3-pc-2').classList.add('nerf');
-  }
+  initKubus('d3-jij');
+  bouwPcDobbelsteen();
   maakPionnen();
 }
 
 bouwBord();
-['d3-jij-1','d3-jij-2','d3-pc-1','d3-pc-2'].forEach(initDobbelsteen);
+initKubus('d3-jij');
+bouwPcDobbelsteen();
 </script>
 </body>
 </html>
