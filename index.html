@@ -324,34 +324,51 @@ const VAKDATA = {
   5:  {verhaal: "Friedrich begint weer eens het rondje \"hoe was je week\" op de vrijmibo en iedereen heeft een goede week gehad!", consequentie: "Gooi opnieuw en beweeg nogmaals het aantal ogen vooruit"},
   6:  {verhaal: "Juan rolt hem binnestebuiten!", consequentie: "Spring direct naar vak 12"},
   9:  {verhaal: "Banning krijgt een nieuwe station familiewagen, ditmaal een Renault!", consequentie: "Gooi opnieuw en beweeg nogmaals het aantal ogen vooruit"},
+  11: {verhaal: "De ABN gaat weer reorganiseren, uiteraard ben jij een mooie lul en mag je blijven.", consequentie: "Zet 2 stappen vooruit"},
   14: {verhaal: "Jimi PR't zijn squat: barkie op de rug!", consequentie: "Gooi opnieuw en beweeg nogmaals het aantal ogen vooruit"},
   18: {verhaal: "4 ton overwaarde op je huis, de winst is gemaximaliseerd!", consequentie: "Gooi opnieuw en beweeg nogmaals het aantal ogen vooruit"},
   19: {verhaal: "Dino pist over je buurvrouw!", consequentie: "Sla een beurt over"},
   23: {verhaal: "Marit geeft je een nieuwe lading gezonde vapes cadeau!", consequentie: "Gooi opnieuw en beweeg nogmaals het aantal ogen vooruit"},
+  25: {verhaal: "Je wacht op Fried om naar het park te gaan, maar hij zit nog even op YouTube", consequentie: "Beurt overslaan"},
   27: {verhaal: "De aubergine is in de aanbieding!", consequentie: "Gooi opnieuw en beweeg nogmaals het aantal ogen vooruit"},
   31: {verhaal: "Je valt in slaap op de oprit, slaap eerst je roes maar uit!", consequentie: "Sla twee beurten over"},
   32: {verhaal: "Jon Bovi blijkt echt te bestaan!", consequentie: "Gooi opnieuw en beweeg nogmaals het aantal ogen vooruit"},
   36: {verhaal: "Een nieuw snoepreisje naar een tropisch oord in het verschiet!", consequentie: "Gooi opnieuw en beweeg nogmaals het aantal ogen vooruit"},
+  39: {verhaal: "Je denkt hele meneer te zijn op de piste, maar pakt enkeltje heli.", consequentie: "Ga terug naar vak 35"},
   41: {verhaal: "Je geeft geen fuck om dat, je kiest je eigen pad", consequentie: "Gooi opnieuw en beweeg nogmaals het aantal ogen vooruit"},
   42: {verhaal: "Je belandt in een vechtpartij met Spanjaarden", consequentie: "Ga terug naar vak 39"},
   45: {verhaal: "Je hebt een duif gespiesd en zit onder het bloed, lekker bezig!", consequentie: "Gooi opnieuw en beweeg nogmaals het aantal ogen vooruit"},
+  47: {verhaal: "Volgens waarneming.nl is er een Blauwborst gespot bij je in de buurt. Wacht totdat je hem ziet.", consequentie: "Sla 1 beurt over"},
+  49: {verhaal: "Je drumstokken zijn versleten, levertijd is 2 weken.", consequentie: "Sla 2 beurten over"},
   50: {verhaal: "Je Tesla is volledig opgeladen, bestemming nog niet bereikt!", consequentie: "Gooi opnieuw en beweeg nogmaals het aantal ogen vooruit"},
   52: {verhaal: "Je lange mat wordt niet meer getolereerd bij het leger en je moet kaal.", consequentie: "Sla drie beurten over"},
   54: {verhaal: "De tinnen editie van het Rode Parelweekend is bijna zover!", consequentie: "Gooi opnieuw en beweeg nogmaals het aantal ogen vooruit"},
-  58: {verhaal: "Pepe coin is gedecimeerd, je vermogen verdampt en je moet je schepen verbranden…", consequentie: "Ga terug naar start"},
+  56: {verhaal: "Je neemt een jumpje op de piste, maar komt verkeerd neer en blesseert je AC-tje.", consequentie: "Ga een stap achteruit"},
+  58: {verhaal: "Pepe coin is gedecimeerd, je vermogen verdampt en je moet je schepen verbranden\u2026", consequentie: "Ga terug naar start"},
   59: {verhaal: "Je speelt nu echt Champions League. Het werp haar vruchten af!", consequentie: "Gooi opnieuw en beweeg nogmaals het aantal ogen vooruit"},
-  63: {verhaal: "Gefeliciteerd! Je ontsleutelt hiermee een groot geheim", consequentie: "Winnaar!"},
+  63: {verhaal: "Gefeliciteerd!", consequentie: "Bij winst ontsleutel je een groot geheim"},
 };
 
 const GANZEN = new Set([5,9,14,18,23,27,32,36,41,45,50,54,59]);
 const SPEC = {
   6:  {emoji:'\u{1F309}', kleur:'#AED6F1'},
+  11: {emoji:'\u{1F3E6}', kleur:'#B8D8F0'},
   19: {emoji:'\u{1F37A}', kleur:'#F9E07A'},
+  25: {emoji:'\u{1F4FA}', kleur:'#F0D8A8'},
   31: {emoji:'\u{1FAA3}', kleur:'#C8C6BC'},
+  39: {emoji:'\u{1F3BF}', kleur:'#D8C8F0'},
   42: {emoji:'\u{1F300}', kleur:'#A8D48A'},
+  47: {emoji:'\u{1F426}', kleur:'#C8E8F0'},
+  49: {emoji:'\u{1F941}', kleur:'#F0C8A8'},
   52: {emoji:'\u26D3\uFE0F', kleur:'#F0B8C8'},
+  56: {emoji:'\u{1F915}', kleur:'#F0C8C8'},
   58: {emoji:'\u{1F480}', kleur:'#F5A0A0'},
 };
+
+// Bewegingsvakken: vak -> doel ('+2' = 2 vooruit, '-1' = 1 achteruit)
+const SPEC_BEWEEG = { 6:12, 11:'+2', 39:35, 42:39, 56:'-1', 58:0 };
+// Wachtvakken: vak -> aantal beurten overslaan
+const SPEC_WACHT = { 19:1, 25:1, 31:2, 47:1, 49:2, 52:3 };
 
 const GANS_SRC = 'gans.png';
 
@@ -710,40 +727,58 @@ async function verwerkZet(sp, eersteWorp){
     return true;
   }
 
-  let g=0;
-  while(GANZEN.has(staat.posities[sp]) && g<10){
-    const gp = staat.posities[sp];
-    logVakMsg(naam,worp,gp,VAKDATA[gp]);
+  // Cascade: handel ganzen en speciale vakken af totdat de pion tot rust komt
+  // (max 8 iteraties als extra veiligheid; langste bekende ketting is 42 -> 39 -> 35)
+  let iter = 0;
+  while(iter < 8 && !staat.klaar){
+    const v = staat.posities[sp];
 
-    await new Promise(r=>setTimeout(r,450));
+    if(GANZEN.has(v)){
+      logVakMsg(naam,worp,v,VAKDATA[v]);
+      await new Promise(r=>setTimeout(r,450));
 
-    worp = werpVoor(sp);
-    await animeerWorp(sp, worp);
-    logMsg('<em>\u{1F3B2} '+naam+' gooit opnieuw: '+worp+'!</em>');
+      worp = werpVoor(sp);
+      await animeerWorp(sp, worp);
+      logMsg('<em>\u{1F3B2} '+naam+' gooit opnieuw: '+worp+'!</em>');
 
-    let np = gp + worp;
-    if(np > 63){
-      np = 63-(np-63);
-      await loopNaar(sp, gp, 63);
-      logMsg('<strong>Stuitert terug naar vak '+np+'!</strong>');
-      await loopNaar(sp, 63, np);
-    } else {
-      await loopNaar(sp, gp, np);
+      let np = v + worp;
+      if(np > 63){
+        np = 63-(np-63);
+        await loopNaar(sp, v, 63);
+        logMsg('<strong>Stuitert terug naar vak '+np+'!</strong>');
+        await loopNaar(sp, 63, np);
+      } else {
+        await loopNaar(sp, v, np);
+      }
+      staat.posities[sp] = np;
+
+      if(np===63){ staat.klaar=true; logVakMsg(naam,worp,np,VAKDATA[63]); return true; }
     }
-    staat.posities[sp] = np;
+    else if(v in SPEC_BEWEEG){
+      logVakMsg(naam,worp,v,VAKDATA[v]);
+      await new Promise(r=>setTimeout(r,400));
 
-    if(np===63){ staat.klaar=true; logVakMsg(naam,worp,np,VAKDATA[63]); return true; }
-    g++;
+      let doel = SPEC_BEWEEG[v];
+      if(doel === '+2') doel = Math.min(v+2, 63);
+      else if(doel === '-1') doel = Math.max(v-1, 0);
+
+      await loopNaar(sp, v, doel);
+      staat.posities[sp] = doel;
+
+      if(doel===63){ staat.klaar=true; logVakMsg(naam,worp,doel,VAKDATA[63]); return true; }
+    }
+    else if(v in SPEC_WACHT){
+      staat.wacht[sp] = SPEC_WACHT[v];
+      logVakMsg(naam,worp,v,VAKDATA[v]);
+      break;
+    }
+    else {
+      // Neutraal vak: log de landing en stop
+      logVakMsg(naam,worp,v,VAKDATA[v]);
+      break;
+    }
+    iter++;
   }
-
-  const v = staat.posities[sp];
-  if(v===6){ logVakMsg(naam,worp,v,VAKDATA[v]); await new Promise(r=>setTimeout(r,400)); await loopNaar(sp, 6, 12); staat.posities[sp]=12; }
-  else if(v===19){ staat.wacht[sp]=1; logVakMsg(naam,worp,v,VAKDATA[v]); }
-  else if(v===31){ staat.wacht[sp]=2; logVakMsg(naam,worp,v,VAKDATA[v]); }
-  else if(v===42){ logVakMsg(naam,worp,v,VAKDATA[v]); await new Promise(r=>setTimeout(r,400)); await loopNaar(sp, 42, 39); staat.posities[sp]=39; }
-  else if(v===52){ staat.wacht[sp]=3; logVakMsg(naam,worp,v,VAKDATA[v]); }
-  else if(v===58){ logVakMsg(naam,worp,v,VAKDATA[v]); await new Promise(r=>setTimeout(r,400)); await loopNaar(sp, 58, 0); staat.posities[sp]=0; }
-  else { logVakMsg(naam,worp,v,VAKDATA[v]); }
 
   return false;
 }
