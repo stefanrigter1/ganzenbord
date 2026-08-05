@@ -815,7 +815,8 @@ async function gooi(){
     await animeerWorp('pc', w2);
     const klaar2 = await verwerkZet('pc', w2);
     if(klaar2){
-      logMsg('\u{1F4BB} <strong>De computer wint dit keer! Probeer het opnieuw om je uitnodiging te winnen...</strong>');
+      logMsg('\u{1F4BB} <strong>Een floppy-gremlin steekt zijn tong in de mond van de computer. Jij wint door TKO!</strong>');
+      startWinSequence();
       eindeSpel();
       return;
     }
